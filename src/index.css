@@ -1,0 +1,15 @@
+/* Targeted CSS Reset for Navbar */
+header, nav, ul, li, a, img {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    box-sizing: border-box; /* Important for consistent sizing */
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
