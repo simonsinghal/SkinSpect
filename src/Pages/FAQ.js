@@ -61,26 +61,26 @@ export default function FAQ() {
     };
 
     return (
-        <div className="font-montserrat min-h-screen flex flex-col">
-            <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md sticky top-0 left-0 right-0 z-1000 w-full">
+        <div className="font-montserrat flex flex-col min-h-screen"> {/* min-h-screen on outer div */}
+            <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md sticky top-0 z-1000 w-full">
                 <div className="logo flex items-center h-full">
                     <img src={Logo} className="logo-image h-16 mr-3" alt="Logo" />
                     <img src={Skinspect} className="logo-text h-9" alt="Skinspect" />
                 </div>
                 <nav className="ml-auto h-full flex items-center">
                     <ul className="nav-links flex items-center gap-8 font-poppins text-base font-medium h-full">
-                        <li><Link to="/" className="text-blue-500 text-2xl ">Home</Link></li>
-                        <li><Link to="/features" className="text-blue-500 text-2xl ">Features</Link></li>
-                        <li><Link to="/about" className="text-blue-500 text-2xl ">About</Link></li>
-                        <li><Link to="/blog" className="text-blue-500 text-2xl ">Blog</Link></li>
-                        <li><Link to="/faq" className="text-blue-500 text-2xl ">FAQ</Link></li>
-                        <li><Link to="/login" className="text-blue-500 text-2xl ">Login</Link></li>
-                        <li><Link to="/register" className="text-blue-500 text-2xl ">Register</Link></li>
+                        <li><Link to="/" className="text-blue-500 text-2xl">Home</Link></li>
+                        <li><Link to="/features" className="text-blue-500 text-2xl">Features</Link></li>
+                        <li><Link to="/about" className="text-blue-500 text-2xl">About</Link></li>
+                        <li><Link to="/blog" className="text-blue-500 text-2xl">Blog</Link></li>
+                        <li><Link to="/faq" className="text-blue-500 text-2xl">FAQ</Link></li>
+                        <li><Link to="/login" className="text-blue-500 text-2xl">Login</Link></li>
+                        <li><Link to="/register" className="text-blue-500 text-2xl">Register</Link></li>
                     </ul>
                 </nav>
             </header>
 
-            <main className="flex-grow flex flex-col items-center justify-center relative">
+            <main className="flex-grow bg-gray-100 overflow-y-auto flex flex-col items-center">
                 <div className="faq-heading-container relative w-full max-w-2xl mb-8">
                     <h1 className="text-3xl font-bold text-white py-4 px-6 rounded-xl shadow-lg relative z-10 bg-blue-900">
                         FAQ - Dermatologist Testimonials
@@ -117,6 +117,4 @@ export default function FAQ() {
             </main>
         </div>
     );
-  }
-
-
+}
