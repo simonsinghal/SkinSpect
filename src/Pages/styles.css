@@ -1,0 +1,48 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Ensure this is higher than dropdown */
+  height: 96px; /* Adjusted height for better visibility */
+  background-color: #f8f8f8; /* Optional */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional */
+}
+
+main {
+  flex-grow: 1;
+  margin-top: 0 !important; /* This is crucial */
+  z-index: 1; /* Ensure main content is below navbar */
+}
+
+/* Accordion styles */
+.AccordionItem[data-state="open"] svg {
+  transform: rotate(180deg);
+}
+
+.AccordionItem > div:nth-child(2) {
+  padding: 1rem;
+  display: none;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+  max-height: 0;
+  position: relative; /* Ensure it stacks correctly */
+  z-index: 1; /* Ensure dropdown is below navbar */
+}
+
+.AccordionItem[data-state="open"] > div:nth-child(2) {
+  display: block;
+  max-height: 500px;
+  position: relative; /* Ensure it stacks correctly */
+  z-index: 1; /* Ensure dropdown is below navbar */
+}
+
+/* Add this to ensure the dropdown appears below the navbar */
+.AccordionItem > div:nth-child(2) {
+  position: relative; /* Change to relative */
+  top: 0; /* Position it below the header */
+  left: 0; /* Align to the left */
+  right: 0; /* Align to the right */
+  background-color: white; /* Ensure background is visible */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for dropdown */
+}
