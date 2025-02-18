@@ -1,88 +1,127 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./Login.css"; // Add your styling file
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
-import BackgroundImage from "../Images/BackgroundImage.png";
 import Icon from "../Images/Icon.png";
+import Facebook from "../Images/Facebook.png";
+import Google from "../Images/Google.png";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Registration submitted:", { email, password });
+    navigate("/login");
+  };
+
   return (
-    <div>
-      {/* Navbar */}
-      <header className="navbar">
-        <div className="logo">
-          <img src={Logo} className="logo-image" alt="Logo" />
-          <img src={Skinspect} className="logo-text" alt="Skinspect" />
+    <div className="font-montserrat min-h-screen flex flex-col">
+      {" "}
+      {/* Corrected: min-h-screen and flex flex-col on outer div */}
+      <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md sticky top-0 z-1000 w-full">
+        <div className="logo flex items-center h-full">
+          <img src={Logo} className="logo-image h-16 mr-3" alt="Logo" />
+          <img src={Skinspect} className="logo-text h-9" alt="Skinspect" />
         </div>
-        <nav>
-          <ul className="nav-links">
+        <nav className="ml-auto h-full flex items-center">
+          <ul className="nav-links flex items-center gap-8 font-poppins text-base font-medium h-full">
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/" className="text-blue-500 text-2xl" >Home</Link>
             </li>
             <li>
-              <Link to="#">Features</Link>
+              <Link to="/features" className="text-blue-500 text-2xl ">Features</Link>
             </li>
             <li>
-              <Link to="#">About</Link>
+              <Link to="/about" className="text-blue-500 text-2xl ">About</Link>
             </li>
             <li>
-              <Link to="#">Blog</Link>
+              <Link to="/blog" className="text-blue-500 text-2xl ">Blog</Link>
             </li>
             <li>
-              <Link to="#">FAQ</Link>
+              <Link to="/faq" className="text-blue-500 text-2xl ">FAQ</Link>
             </li>
             <li>
-              <Link to="/login">Login</Link>
+              <Link to="/login" className="text-blue-500 text-2xl ">Login</Link>
             </li>
             <li>
-              <Link to="/register">Register</Link>
+              <Link to="/register" className="text-blue-500 text-2xl">Register</Link>
             </li>
           </ul>
         </nav>
       </header>
-
-      {/* Main Content */}
-      <div className="login-container">
-        {/* Left Half */}
-        <div className="login-left">
-          <img
-            src={BackgroundImage}
-            className="background-image"
-            alt="Background"
-          />
-          <div className="icon-container">
-            <img src={Icon} className="icon-image" alt="Icon" />
+      <div className="login-container flex-grow flex">
+        {" "}
+        {/* Corrected: flex-grow on login-container */}
+        <div className="login-left w-1/2 relative bg-gradient-to-b from-[#0575E6] via-[#02298A] to-[#021B79]">
+          <div className="icon-container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+            <img src={Icon} className="icon-image w-80 h-80" alt="Icon" />
           </div>
         </div>
+        <div className="login-right w-1/2 flex flex-col justify-center px-20 overflow-y-auto">
+          {" "}
+          {/* Corrected: overflow-y-auto on login-right */}
+          <h3 className="text-3xl font-bold mb-2">Hello!</h3>
+          <p className="text-xl text-gray-600 mb-6">Welcome Back</p>
+          <form className="login-form w-3/4" onSubmit={handleSubmit}>
+            <div className="form-group mb-4">
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="w-full px-4 py-2 border rounded-xl text-base"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group mb-4">
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full px-4 py-2 border rounded-xl text-base"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="flex justify-start w-full">
+              {" "}
+              {/* Added w-full */}
+              <button
+                className="login-button w-2/3 py-2 bg-[#1e54dc] text-white rounded-xl text-lg hover:bg-[#0056b3] transition duration-300"
+                type="submit"
+              >
+                Login
+              </button>
+            </div>
 
-        {/* Right Half */}
-        <div className="login-right">
-          <h3>Hello Again!</h3>
-          <p>Welcome Back</p>
-          <form className="login-form">
-            <div className="form-group">
-              <input type="email" placeholder="Email Address" />
+            <div className="mt-6 flex flex-col items-center w-2/3">
+              <Link
+                to="/login"
+                className="forgot-password text-base underline text-[#02298A] hover:text-[#0056b3] transition duration-300 mb-4 text-center"
+              >
+                Forgot Password
+              </Link>
+              <div className="social-icons flex justify-center gap-4">
+                <Link to="/auth/google">
+                  <img
+                    src={Google}
+                    className="google w-12 h-12"
+                    alt="Google Icon"
+                  />
+                </Link>
+                <Link to="/auth/facebook">
+                  <img
+                    src={Facebook}
+                    className="facebook w-12 h-12"
+                    alt="Facebook Icon"
+                  />
+                </Link>
+              </div>
             </div>
-            <div className="form-group">
-              <input type="password" placeholder="Password" />
-            </div>
-            <button className="login-button" type="submit">
-              Login
-            </button>
           </form>
-
-          {/* Centered Social Icons and Forgot Password */}
-          <div className="centered-container">
-            <div className="social-icons">
-              <i className="fab fa-google google-icon"></i>
-              <i className="fab fa-facebook-f facebook-icon"></i>
-            </div>
-            <a href="#" className="forgot-password">
-              Forgot Password
-            </a>
-          </div>
-
         </div>
       </div>
     </div>
