@@ -37,9 +37,9 @@ const Register = () => {
             <li>
               <Link to="/about" className="text-blue-500 text-2xl ">About</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/blog" className="text-blue-500 text-2xl ">Blog</Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/faq" className="text-blue-500 text-2xl ">FAQ</Link>
             </li>
