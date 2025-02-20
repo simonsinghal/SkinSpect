@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import Icon from "../Images/Icon.png";
@@ -407,3 +408,16 @@ const FeaturesPage = () => {
 };
 
 export default FeaturesPage;
+=======
+import React from 'react'
+
+const Features = () => {
+  return (
+    <div>
+      Features
+    </div>
+  )
+}
+
+export default Features
+>>>>>>> backend
