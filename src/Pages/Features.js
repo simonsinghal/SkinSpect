@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom"; 
 import Icon from "../Images/Icon.png";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -98,67 +98,55 @@ const FeaturesPage = () => {
 
       {/* Section 2 */}
       <section className="pt-0 px-6 md:px-24 w-full relative">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-0 absolute top-0 left-0 w-full h-[300px] md:h-[300px]">
-          {/* Column 1 */}
-          <div className="bg-blue-100 p-6 text-center flex flex-col rounded-l-lg md:rounded-l-lg h-fit md:h-[300px]">
-            {" "}
-            {/* Use h-fit and md:h-[300px] */}
-            <h3 className="text-2xl font-semibold mb-2">Image Analyze</h3>
-            <div className="h-1 w-16 bg-blue-500 mx-auto mb-4"></div>
-            <p className="text-gray-700 flex-grow text-lg">
-              Unlock powerful insights from images with AI-driven analysis.
-              Detect patterns, recognize objects, and extract valuable data with
-              ease.
-            </p>
-            <button className="text-blue-500 mt-4">Learn more</button>
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-0 absolute top-0 left-0 w-full h-[300px] md:h-[300px]">
+                {/* Column 1 */}
+                <div className="bg-blue-100 p-6 text-center flex flex-col rounded-l-lg md:rounded-l-lg h-fit md:h-[300px]">
+                    <h3 className="text-2xl font-semibold mb-2">Image Analysis</h3>
+                    <div className="h-1 w-16 bg-blue-500 mx-auto mb-4"></div>
+                    <p className="text-gray-700 flex-grow text-lg">
+                        Unlock powerful insights from images with AI-driven analysis.
+                        Detect patterns, recognize objects, and extract valuable data with
+                        ease.
+                    </p>
+                    <Link to="/imageanalysis" className="text-blue-500 mt-4">Analyze</Link>
+                </div>
 
-          {/* Column 2 */}
-          <div className="bg-blue-300 p-6 text-center flex flex-col h-fit md:h-[300px]">
-            {" "}
-            {/* Use h-fit and md:h-[300px] */}
-            <h3 className="text-2xl font-semibold mb-2">Text Analysis</h3>
-            <div className="h-1 w-16 bg-blue-700 mx-auto mb-4"></div>
-            <p className="text-gray-700 flex-grow text-lg">
-              Analyze and understand text with advanced AI tools. Extract key
-              information, summarize content, and gain deep insights
-              efficiently.
-            </p>
-            <button className="text-blue-700 mt-4">Learn more</button>
-          </div>
+                {/* Column 2 */}
+                <div className="bg-blue-300 p-6 text-center flex flex-col h-fit md:h-[300px]">
+                    <h3 className="text-2xl font-semibold mb-2">Text Analysis</h3>
+                    <div className="h-1 w-16 bg-blue-700 mx-auto mb-4"></div>
+                    <p className="text-gray-700 flex-grow text-lg">
+                        Analyze and understand text with advanced AI tools. Extract key
+                        information, summarize content, and gain deep insights
+                        efficiently.
+                    </p>
+                    <Link to="/textanalysis" className="text-blue-700 mt-4">Analyze</Link>
+                </div>
 
-          {/* Column 3 */}
-          <div className="bg-blue-500 p-6 text-center flex flex-col h-fit md:h-[300px]">
-            {" "}
-            {/* Use h-fit and md:h-[300px] */}
-            <h3 className="text-2xl font-semibold mb-2 text-white">
-              Find Doctor
-            </h3>
-            <div className="h-1 w-16 bg-white mx-auto mb-4"></div>
-            <p className="text-white flex-grow text-lg">
-              Connect with certified healthcare professionals instantly. Get
-              expert consultations and find the right doctor based on your
-              needs.
-            </p>
-            <button className="text-white mt-4">Learn more</button>
-          </div>
+                {/* Column 3 */}
+                <div className="bg-blue-500 p-6 text-center flex flex-col h-fit md:h-[300px]">
+                    <h3 className="text-2xl font-semibold mb-2 text-white">Find Doctor</h3>
+                    <div className="h-1 w-16 bg-white mx-auto mb-4"></div>
+                    <p className="text-white flex-grow text-lg">
+                        Connect with certified healthcare professionals instantly. Get
+                        expert consultations and find the right doctor based on your
+                        needs.
+                    </p>
+                    <Link to="/finddoctor" className="text-white mt-4">Learn more</Link>
+                </div>
 
-          {/* Column 4 */}
-          <div className="bg-blue-900 p-6 text-center flex flex-col rounded-r-lg md:rounded-r-lg h-fit md:h-[300px]">
-            {" "}
-            {/* Use h-fit and md:h-[300px] */}
-            <h3 className="text-2xl font-semibold mb-2 text-white">
-              Read Blogs
-            </h3>
-            <div className="h-1 w-16 bg-blue-300 mx-auto mb-4"></div>
-            <p className="text-white flex-grow text-lg">
-              Stay informed with the latest trends in AI, healthcare, and
-              technology. Explore expert-written blogs for insights and updates.
-            </p>
-            <button className="text-blue-300 mt-4">Learn more</button>
-          </div>
-        </div>
-      </section>
+                {/* Column 4 */}
+                <div className="bg-blue-900 p-6 text-center flex flex-col rounded-r-lg md:rounded-r-lg h-fit md:h-[300px]">
+                    <h3 className="text-2xl font-semibold mb-2 text-white">Read Blogs</h3>
+                    <div className="h-1 w-16 bg-blue-300 mx-auto mb-4"></div>
+                    <p className="text-white flex-grow text-lg">
+                        Stay informed with the latest trends in AI, healthcare, and
+                        technology. Explore expert-written blogs for insights and updates.
+                    </p>
+                    <Link to="/blogs" className="text-blue-300 mt-4">Learn more</Link>
+                </div>
+            </div>
+        </section>
 
       {/* Section 3 */}
       <section className="py-12 px-6 md:px-24 w-full bg-white-100 mt-[300px] md:mt-[300px]">

@@ -8,6 +8,8 @@ import Features from './Pages/Features';
 import Blog from './Pages/Blog';
 import About from './Pages/About';
 import FAQ from './Pages/FAQ';
+import ImageAnalysis from './Pages/ImageAnalysis';
+import TextAnalysis from './Pages/TextAnalysis';
 
 function App() {
   return (
@@ -20,6 +22,9 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/imageanalysis" element={<ImageAnalysis />} />
+        <Route path="/textanalysis" element={<TextAnalysis />} />
+        
       </Routes>
     </Router>
   );
