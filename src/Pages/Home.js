@@ -4,7 +4,6 @@ import Skinspect from "../Images/Skinspect.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
 import Icon from "../Images/Icon.png";
 import Logo from "../Images/Logo.png";
-<<<<<<< HEAD
 import robot from "../Images/robot.png";
 import w1 from "../Images/w1.png";
 import w2 from "../Images/w2.png";
@@ -75,10 +74,6 @@ const Home = () => {
       </button>
     );
 
-=======
-
-const Home = () => {
->>>>>>> backend
   return (
     <div className="font-montserrat">
       {/* Navbar */}
@@ -90,7 +85,6 @@ const Home = () => {
         <nav className="ml-auto h-full flex items-center">
           <ul className="nav-links flex items-center gap-8 font-poppins text-base font-medium h-full">
             <li>
-<<<<<<< HEAD
               <Link to="/" className="text-blue-500 text-2xl">
                 Home
               </Link>
@@ -122,27 +116,6 @@ const Home = () => {
               <Link to="/register" className="text-blue-500 text-2xl">
                 Register
               </Link>
-=======
-              <Link to="/" className="text-blue-500 text-2xl" >Home</Link>
-            </li>
-            <li>
-              <Link to="/features" className="text-blue-500 text-2xl ">Features</Link>
-            </li>
-            <li>
-              <Link to="/about" className="text-blue-500 text-2xl ">About</Link>
-            </li>
-            <li>
-              <Link to="/blog" className="text-blue-500 text-2xl ">Blog</Link>
-            </li>
-            <li>
-              <Link to="/faq" className="text-blue-500 text-2xl ">FAQ</Link>
-            </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl ">Login</Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">Register</Link>
->>>>>>> backend
             </li>
           </ul>
         </nav>
@@ -162,12 +135,7 @@ const Home = () => {
             src={Icon}
             className="icon-image h-[300px] mx-auto mb-4 relative bottom-12"
             alt="Icon"
-<<<<<<< HEAD
           />
-=======
-          />{" "}
-          {/* mx-auto for centering */}
->>>>>>> backend
           <h2 className="heading text-4xl mb-2 font-bold">
             YOUR SKIN HEALTH SIMPLIFIED WITH AI
           </h2>
@@ -180,7 +148,6 @@ const Home = () => {
           </button>
         </div>
       </section>
-<<<<<<< HEAD
 
       {/* Diseases Covered Section */}
       <section className="py-12 px-6 md:px-24 bg-blue-100">
@@ -324,8 +291,6 @@ const Home = () => {
           }
         `}
       </style>
-=======
->>>>>>> backend
     </div>
   );
 };

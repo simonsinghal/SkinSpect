@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
@@ -325,16 +324,3 @@ const About = () => {
 };
 
 export default About;
-=======
-import React from 'react'
-
-const About = () => {
-  return (
-    <div>
-      About
-    </div>
-  )
-}
-
-export default About
->>>>>>> backend
