@@ -12,16 +12,56 @@ import leftArrow from "../Images/left-arrow.png";
 import rightArrow from "../Images/right-arrow.png";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
 
 const Home = () => {
   const diseases = [
-    { id: 1, name: "Acne", content: "Lorem ipsum..." },
-    { id: 2, name: "Eczema", content: "Lorem ipsum..." },
-    { id: 3, name: "Psoriasis", content: "Lorem ipsum..." },
-    { id: 4, name: "Melanoma", content: "Lorem ipsum..." },
-    { id: 5, name: "Rosacea", content: "Lorem ipsum..." },
-    { id: 6, name: "Dermatitis", content: "Lorem ipsum..." },
-    // Add more diseases with content as needed
+    {
+      id: 1,
+      name: "Basal Cell Carcinoma (BCC)",
+      content:
+        "Basal cell carcinoma (BCC) is a common type of skin cancer that develops in the basal cells of the skin.",
+    },
+    {
+      id: 2,
+      name: "Melanoma",
+      content:
+        "Melanoma is a dangerous type of skin cancer that develops in the cells that produce melanin.",
+    },
+    {
+      id: 3,
+      name: "Squamous Cell Carcinoma (SCC)",
+      content:
+        "Squamous cell carcinoma (SCC) is a cancer that starts in squamous cells, which line the skin, respiratory, and digestive tracts.",
+    },
+    {
+      id: 4,
+      name: "Atopic Dermatitis",
+      content:
+        "Atopic dermatitis, also known as eczema, is a chronic skin condition that causes inflamed, itchy, red, dry, and cracked skin.",
+    },
+    {
+      id: 5,
+      name: "Eczema",
+      content:
+        "Eczema (atopic dermatitis) is a chronic skin condition that causes inflammation, redness, itching, and dry skin.",
+    },
+    {
+      id: 6,
+      name: "Seborrheic Keratoses and Other Benign Tumors",
+      content:
+        "A seborrheic keratosis is a very common, noncancerous (benign) skin growth that appears as a raised, often waxy, brown or black spot on the skin, typically found on the face, chest, and back",
+    },
+    {
+      id: 7,
+      name: "Tinea (Ringworm), Candidiasis, and Other Fungal Infections",
+      content:
+        "Tinea, also known as ringworm, is a fungal infection that can affect the skin, nails, and hair. ",
+    },
   ];
 
   const renderArrowPrev = (onClickHandler, hasPrev, label) =>
@@ -73,6 +113,28 @@ const Home = () => {
         />
       </button>
     );
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
 
   return (
     <div className="font-montserrat">
@@ -155,40 +217,19 @@ const Home = () => {
           <h2 className="text-3xl font-bold mb-8">
             Which Skin Conditions Require Evaluation With SkinSpect Website?
           </h2>
-          <Carousel
-            showArrows={true}
-            showThumbs={false}
-            showStatus={false}
-            infiniteLoop={true}
-            emulateTouch={true}
-            swipeable={true}
-            dynamicHeight={true}
-            className="custom-carousel-dots"
-            renderArrowPrev={renderArrowPrev}
-            renderArrowNext={renderArrowNext}
-          >
+          <Slider {...settings}>
             {diseases.map((disease) => (
               <div key={disease.id} className="p-4">
-                <div className="bg-white rounded-lg p-8 flex items-center justify-center h-auto">
-                  {" "}
-                  {/* Increased padding to p-8 */}
-                  {/* Blue Circle on the Left */}
-                  <div className="bg-blue-500 rounded-full w-32 h-32 flex items-center justify-center mr-12">
-                    {" "}
-                    {/* Increased mr-12 */}
+                <div className="bg-white rounded-lg p-6 flex flex-col items-center">
+                  <div className="bg-blue-500 rounded-full w-32 h-32 flex items-center justify-center mb-4">
                     {/* Placeholder for disease icon or image */}
                   </div>
-                  {/* Content on the Right */}
-                  <div className="text-left">
-                    <h3 className="text-xl font-semibold mb-2">
-                      {disease.name}
-                    </h3>
-                    <p className="text-gray-700">{disease.content}</p>
-                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{disease.name}</h3>
+                  <p className="text-gray-700 text-center">{disease.content}</p>
                 </div>
               </div>
             ))}
-          </Carousel>
+          </Slider>
         </div>
       </section>
 

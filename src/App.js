@@ -11,6 +11,7 @@ import FAQ from './Pages/FAQ';
 import ImageAnalysis from './Pages/ImageAnalysis';
 import TextAnalysis from './Pages/TextAnalysis';
 import FindDoctor from './Pages/FindDoctor';
+import DoctorsResult from './Pages/DoctorsResult';
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
         <Route path="/imageanalysis" element={<ImageAnalysis />} />
         <Route path="/textanalysis" element={<TextAnalysis />} />
         <Route path="/finddoctor" element={<FindDoctor />} />
-        
+        <Route path="/doctorsresult" element={<DoctorsResult/>} />
       </Routes>
     </Router>
   );

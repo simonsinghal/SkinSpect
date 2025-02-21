@@ -1,34 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
 
 const FindDoctor = () => {
-    const [doctorsData, setDoctorsData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-  
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch("YOUR_BACKEND_API_ENDPOINT"); // Replace with actual API endpoint
-          if (!response.ok) {
-            throw new Error("Failed to fetch doctor data");
-          }
-          const data = await response.json();
-          setDoctorsData(data);
-          setLoading(false);
-        } catch (err) {
-          setError(err.message);
-          setLoading(false);
+  const navigate = useNavigate();
+  const [cities, setCities] = useState([]);
+  const [states, setStates] = useState([]);
+  const [countries, setCountries] = useState([]); // Added countries state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const citiesResponse = await fetch("YOUR_BACKEND_CITIES_ENDPOINT");
+        const statesResponse = await fetch("YOUR_BACKEND_STATES_ENDPOINT");
+        const countriesResponse = await fetch("YOUR_BACKEND_COUNTRIES_ENDPOINT");
+
+        if (!citiesResponse.ok || !statesResponse.ok || !countriesResponse.ok) {
+          throw new Error("Failed to fetch location data");
         }
-      };
-  
-      fetchData();
-    }, []);
+
+        const citiesData = await citiesResponse.json();
+        const statesData = await statesResponse.json();
+        const countryData = await countriesResponse.json();
+
+        setCities(citiesData);
+        setStates(statesData);
+        setCountries(countryData);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div>
+    <div className="font-montserrat">
       {/* Navbar */}
       <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md sticky top-0 z-1000 w-full">
         <div className="logo flex items-center h-100">
@@ -71,51 +84,77 @@ const FindDoctor = () => {
         </nav>
       </header>
 
+      {/* Main Content Section */}
       <section
-        className="main-content flex flex-col items-center min-h-screen"
+        className="main-content flex flex-col items-center justify-center min-h-screen p-8"
         style={{
           backgroundImage: `url(${BackgroundImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="bg-blue-100 rounded-lg shadow-md p-6 mt-10 w-4/5 max-w-5xl">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">List of doctors</h2>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              ▼ Filter
+        <h2 className="text-6xl text-white font-semibold text-center mb-8">
+          Find Nearby Dermatologist
+        </h2>
+        <p className="text-center mb-10 text-white text-md">
+          Mention your location details precisely for better results
+        </p>
+
+        {/* White Box */}
+        <div className="bg-white rounded-2xl p-8 shadow-lg w-4/5 max-w-lg">
+          <input
+            type="text"
+            placeholder="Range within which you need consultation (kms)"
+            className="w-full p-2 mb-4 border rounded-2xl bg-blue-600 text-white placeholder-white"
+          />
+          <input
+            type="text"
+            placeholder="Pin Code"
+            className="w-full p-2 mb-4 border rounded-2xl bg-blue-600 text-white placeholder-white"
+          />
+          <select className="w-full p-2 mb-4 border rounded-2xl bg-blue-600 text-white">
+            <option>City</option>
+            {cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+
+          <select className="w-full p-2 mb-4 border rounded-2xl bg-blue-600 text-white">
+            <option>State</option>
+            {states.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
+
+          <select className="w-full p-2 mb-6 border rounded-2xl bg-blue-600 text-white">
+            <option>Country</option>
+            {countries.map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
+
+          {/* Submit Button */}
+          <div className="flex justify-center">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl"
+              onClick={() => navigate("/doctorsresult")}
+            >
+              Submit
             </button>
           </div>
-          <p className="text-gray-600 mb-4">25 available doctors</p>
-          <table className="w-full text-left table-auto">
-            <thead>
-              <tr>
-                <th className="border  border-blue-500 px-4 py-2">S.No</th>
-                <th className="border  border-blue-500 px-4 py-2">Hospital/Clinic</th>
-                <th className="border  border-blue-500 px-4 py-2">Phone number</th>
-                <th className="border  border-blue-500 px-4 py-2">Timings</th>
-                <th className="border  border-blue-500 px-4 py-2">Ratings</th>
-                <th className="border  border-blue-500 px-4 py-2">Location</th>
-              </tr>
-            </thead>
-            <tbody>
-              {doctorsData.map((doctor) => (
-                <tr key={doctor.id}>
-                  <td className="border border-blue-500 px-4 py-2">{doctor.id}</td>
-                  <td className="border  border-blue-500px-4 py-2">{doctor.name}</td>
-                  <td className="border  border-blue-500 px-4 py-2">{doctor.phone}</td>
-                  <td className="border  border-blue-500 px-4 py-2">{doctor.timings}</td>
-                  <td className="border  border-blue-500 px-4 py-2">{doctor.ratings}</td>
-                  <td className="border  border-blue-500 px-4 py-2">{doctor.location}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="flex justify-center mt-6">
-            <button className="bg-blue-600 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">
-              Load More
-            </button>
-          </div>
+
+          {/* Text Below Button */}
+          <p className="text-xs text-center mt-4">
+            *You can select upto 3 symptoms only
+            <br />
+            **Make sure to enter your correct details in name, gender and age criteria for better results
+          </p>
         </div>
       </section>
     </div>
