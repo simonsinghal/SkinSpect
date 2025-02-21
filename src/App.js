@@ -10,6 +10,7 @@ import About from './Pages/About';
 import FAQ from './Pages/FAQ';
 import ImageAnalysis from './Pages/ImageAnalysis';
 import TextAnalysis from './Pages/TextAnalysis';
+import FindDoctor from './Pages/FindDoctor';
 
 function App() {
   return (
@@ -20,10 +21,11 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/features" element={<Features />} />
         <Route path="/about" element={<About />} />
-        <Route path="/blog" element={<Blog />} />
+        <Route path="/blogs" element={<Blog />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/imageanalysis" element={<ImageAnalysis />} />
         <Route path="/textanalysis" element={<TextAnalysis />} />
+        <Route path="/finddoctor" element={<FindDoctor />} />
         
       </Routes>
     </Router>

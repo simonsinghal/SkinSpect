@@ -108,7 +108,7 @@ const FeaturesPage = () => {
                         Detect patterns, recognize objects, and extract valuable data with
                         ease.
                     </p>
-                    <Link to="/imageanalysis" className="text-blue-500 mt-4">Analyze</Link>
+                    <Link to="/imageanalysis" className="text-blue-500 mt-4 underline">Analyze</Link>
                 </div>
 
                 {/* Column 2 */}
@@ -120,7 +120,7 @@ const FeaturesPage = () => {
                         information, summarize content, and gain deep insights
                         efficiently.
                     </p>
-                    <Link to="/textanalysis" className="text-blue-700 mt-4">Analyze</Link>
+                    <Link to="/textanalysis" className="text-blue-700 mt-4 underline">Analyze</Link>
                 </div>
 
                 {/* Column 3 */}
@@ -132,7 +132,7 @@ const FeaturesPage = () => {
                         expert consultations and find the right doctor based on your
                         needs.
                     </p>
-                    <Link to="/finddoctor" className="text-white mt-4">Learn more</Link>
+                    <Link to="/finddoctor" className="text-white mt-4 underline">Find</Link>
                 </div>
 
                 {/* Column 4 */}
@@ -143,7 +143,7 @@ const FeaturesPage = () => {
                         Stay informed with the latest trends in AI, healthcare, and
                         technology. Explore expert-written blogs for insights and updates.
                     </p>
-                    <Link to="/blogs" className="text-blue-300 mt-4">Learn more</Link>
+                    <Link to="/blogs" className="text-blue-300 mt-4 underline">Learn more</Link>
                 </div>
             </div>
         </section>
