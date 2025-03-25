@@ -15,13 +15,11 @@ const Dashboard = ({ userId }) => {
 
   useEffect(() => {
     if (!userId) return;
-
+  
     const fetchScans = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/scans/${userId}`
-        );
+        const response = await axios.get(`http://localhost:5000/api/scans/${userId}`);
         console.log("Fetched Scans:", response.data);
         setScans(response.data);
       } catch (error) {
@@ -30,9 +28,10 @@ const Dashboard = ({ userId }) => {
         setLoading(false); 
       }
     };
-
+  
     fetchScans();
   }, [userId]);
+  
 
   return (
     <div className="font-montserrat">
@@ -368,36 +367,40 @@ const Dashboard = ({ userId }) => {
                       </p>
 
                       <div className="overflow-x-auto mt-4">
-                        <table className="min-w-full border border-gray-300 rounded-lg">
-                          <thead>
-                            <tr className="bg-blue-500 text-white">
-                              <th className="px-4 py-2">S.No</th>
-                              <th className="px-4 py-2">Details</th>
-                              <th className="px-4 py-2">Images/Symptoms</th>
-                              <th className="px-4 py-2">Diseases Predicted</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {scans.map((scan, index) => (
-                              <tr key={index} className="border-b text-center">
-                                <td className="px-4 py-2">{index + 1}</td>
-                                <td className="px-4 py-2">
-                                  {scan.fullName}, {scan.age}, {scan.gender}
-                                </td>
-                                <td className="px-4 py-2">
-                                  <img
-                                    src={scan.image}
-                                    alt="Symptom"
-                                    className="w-16 h-16 object-cover rounded"
-                                  />
-                                </td>
-                                <td className="px-4 py-2 text-blue-600">
-                                  {scan.disease}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                      <table className="min-w-full border border-gray-300 rounded-lg">
+  <thead>
+    <tr className="bg-blue-700 text-white">
+      <th className="px-4 py-2">S.No</th>
+      <th className="px-4 py-2">Details</th>
+      <th className="px-4 py-2">Images/Symptoms</th>
+      <th className="px-4 py-2">Diseases Predicted</th>
+    </tr>
+  </thead>
+  <tbody>
+    {scans.map((scan, index) => (
+      <tr key={index} className="border-b text-center">
+        <td className="px-4 py-2">{index + 1}</td>
+        <td className="px-4 py-2">
+          {scan.name}, {scan.age}, {scan.gender}
+        </td>
+        <td className="px-4 py-2 flex justify-center gap-2">
+          {scan.images.map((image, imgIndex) => (
+            <img
+              key={imgIndex}
+              src={`http://localhost:5000/${image}`} // Ensure the correct image path
+              alt="Symptom"
+              className="w-16 h-16 object-cover rounded"
+            />
+          ))}
+        </td>
+        <td className="px-4 py-2 text-blue-600">
+          {scan.result || "Pending..."}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
                       </div>
                     </div>
                   )}

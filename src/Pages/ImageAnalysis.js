@@ -15,69 +15,70 @@ const ImageAnalysisPage = () => {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
 
-  // Handle image upload
-  const handleImageUpload = (event, setImage, setFile) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
-      setFile(file);
-    }
-  };
+// Handle image upload
+const handleImageUpload = (event, setImage, setFile) => {
+  const file = event.target.files[0];
+  if (file) {
+    setImage(URL.createObjectURL(file));
+    setFile(file);
+  }
+};
 
-  // Handle form submission
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+// Handle form submission
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    if (!file1 && !file2) {
-      alert("Please upload at least one image.");
-      return;
-    }
+  if (!file1 && !file2) {
+    alert("Please upload at least one image.");
+    return;
+  }
 
-    if (!fullName || !gender || !age) {
-      alert("Please fill in all fields and provide image"); //changed message
-      return;
-    }
+  if (!fullName || !gender || !age) {
+    alert("Please fill in all fields and provide image"); //changed message
+    return;
+  }
 
-    const formData = new FormData();
-    if (file1) formData.append("image1", file1); // Changed key name to image1 and image2
-    if (file2) formData.append("image2", file2);
-    formData.append("fullName", fullName); // Changed from userId to fullName
-    formData.append("gender", gender);
-    formData.append("age", age);
+  const formData = new FormData();
+  if (file1) formData.append("image1", file1); // Changed key name to image1 and image2
+  if (file2) formData.append("image2", file2);
+  formData.append("fullName", fullName); // Changed from userId to fullName
+  formData.append("gender", gender);
+  formData.append("age", age);
 
-    console.log("[handleSubmit] Starting upload process...");
-    console.log("[handleSubmit] FormData contents:");
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
+  console.log("[handleSubmit] Starting upload process...");
+  console.log("[handleSubmit] FormData contents:");
+  for (let pair of formData.entries()) {
+    console.log(pair[0] + ": " + pair[1]);
+  }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/upload", // Corrected route.  Make sure this matches your backend route
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
-      if (response.data.message === 'Files uploaded successfully') { // Changed to check for message
-        alert("Upload successful!");
-        // Optionally reset the form here
-        setImage1(null);
-        setImage2(null);
-        setFile1(null);
-        setFile2(null);
-        setFullName("");
-        setGender("");
-        setAge("");
-      } else {
-        alert("Upload failed.  Server Response: " + response.data.message); // Display server message
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/upload", // Corrected route.  Make sure this matches your backend route
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
       }
-    } catch (error) {
-      console.error("Upload error:", error);
-      alert("Error uploading. Check console.  " + error.message); // include error message
+    );
+
+    if (response.data.message === 'Files uploaded successfully') { // Changed to check for message
+      alert("Upload successful!");
+      // Optionally reset the form here
+      setImage1(null);
+      setImage2(null);
+      setFile1(null);
+      setFile2(null);
+      setFullName("");
+      setGender("");
+      setAge("");
+    } else {
+      alert("Upload failed.  Server Response: " + response.data.message); // Display server message
     }
-  };
+  } catch (error) {
+    console.error("Upload error:", error);
+    alert("Error uploading. Check console.  " + error.message); // include error message
+  }
+};
+
 
   return (
     <div className="font-montserrat">

@@ -8,4 +8,7 @@ const scanSchema = new mongoose.Schema({
 });
 
 const Scan = mongoose.model("Scan", scanSchema);
-module.exports = Scan;
+module.exports = Scan;    
+
+
+
