@@ -1,11 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import UploadIcon from "../Images/uploadIcon.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
+import axios from "axios";
 
 const ImageAnalysisPage = () => {
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [file1, setFile1] = useState(null);
+  const [file2, setFile2] = useState(null);
+  const [fullName, setFullName] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+
+  // Handle image upload
+  const handleImageUpload = (event, setImage, setFile) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file));
+      setFile(file);
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!file1 && !file2) {
+      alert("Please upload at least one image.");
+      return;
+    }
+
+    if (!fullName || !gender || !age) {
+      alert("Please fill in all fields and provide image"); //changed message
+      return;
+    }
+
+    const formData = new FormData();
+    if (file1) formData.append("image1", file1); // Changed key name to image1 and image2
+    if (file2) formData.append("image2", file2);
+    formData.append("fullName", fullName); // Changed from userId to fullName
+    formData.append("gender", gender);
+    formData.append("age", age);
+
+    console.log("[handleSubmit] Starting upload process...");
+    console.log("[handleSubmit] FormData contents:");
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/upload", // Corrected route.  Make sure this matches your backend route
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (response.data.message === 'Files uploaded successfully') { // Changed to check for message
+        alert("Upload successful!");
+        // Optionally reset the form here
+        setImage1(null);
+        setImage2(null);
+        setFile1(null);
+        setFile2(null);
+        setFullName("");
+        setGender("");
+        setAge("");
+      } else {
+        alert("Upload failed.  Server Response: " + response.data.message); // Display server message
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Error uploading. Check console.  " + error.message); // include error message
+    }
+  };
+
   return (
     <div className="font-montserrat">
       {/* Navbar */}
@@ -51,7 +124,7 @@ const ImageAnalysisPage = () => {
       </header>
 
       {/* Main Content */}
-      <div className=" relative flex w-full font-montserrat">
+      <div className="relative flex w-full font-montserrat">
         {/* Model 1 (Left Half) */}
         <div className="w-1/2 bg-white p-8 h-full">
           <div className="mb-8 ml-8">
@@ -61,29 +134,40 @@ const ImageAnalysisPage = () => {
             </p>
           </div>
 
-          {/* Double Layer Box with Content */}
-          <div
-            className="bg-blue-600 rounded-3xl p-2 mb-4 mx-auto"
-            style={{
-              width: "400px",
-              height: "350px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              className="bg-white rounded-lg p-4 flex flex-col items-center justify-center"
-              style={{ width: "340px", height: "230px" }}
-            >
-              <img src={UploadIcon} alt="Upload" className="h-12 w-16 mb-2" />
-              <p className="text-black mb-2 font-bold">Upload Image</p>
-              <p className="text-sm text-black">
-                Image size must be less than 5 MB
-              </p>
+          {/* Image Upload Box */}
+          <div className="bg-blue-600 rounded-3xl p-2 mb-4 mx-auto w-[400px] h-[350px] flex flex-col items-center justify-center">
+            <div className="bg-white rounded-lg p-4 flex flex-col items-center justify-center w-[340px] h-[230px]">
+              {image1 ? (
+                <img
+                  src={image1}
+                  alt="Uploaded"
+                  className="h-40 w-full object-cover rounded-lg"
+                />
+              ) : (
+                <>
+                  <img
+                    src={UploadIcon}
+                    alt="Upload"
+                    className="h-12 w-16 mb-2"
+                  />
+                  <p className="text-black mb-2 font-bold">Upload Image</p>
+                  <p className="text-sm text-black">
+                    Image size must be less than 5 MB
+                  </p>
+                </>
+              )}
             </div>
-            <button className="bg-white hover:bg-blue-300 text-blue-500 font-bold py-2 px-4 rounded mt-4 w-[338px]">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              id="imageUpload1"
+              onChange={(e) => handleImageUpload(e, setImage1, setFile1)} // Added setFile1
+            />
+            <button
+              className="bg-white hover:bg-blue-300 text-blue-500 font-bold py-2 px-4 rounded mt-4 w-[338px]"
+              onClick={() => document.getElementById("imageUpload1").click()}
+            >
               Select Image
             </button>
           </div>
@@ -93,31 +177,35 @@ const ImageAnalysisPage = () => {
             <input
               type="text"
               placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="border border-gray-300 p-2 rounded-lg w-full mb-2 bg-blue-600 text-white placeholder-white"
-              style={{ maxWidth: "400px" }}
             />
             <select
-              className="border border-gray-300 p-2 rounded-lg w-full mb-2 bg-blue-600 text-white placeholder-white"
-              style={{ maxWidth: "400px" }}
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="border border-gray-300 p-2 rounded-lg w-full mb-2 bg-blue-600 text-white"
             >
-              <option>Gender</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
+              <option value="">Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
             <input
               type="number"
               placeholder="Age"
-              className="border border-gray-300 p-2 rounded-lg w-full bg-blue-600 text-white placeholder-white"
-              style={{ maxWidth: "400px" }}
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              className="border border-gray-300 p-2 rounded-lg w-full bg-blue-600 text-white"
             />
           </div>
 
-          {/*Submit Button  */}
+          {/* Submit Button */}
           <div className="flex justify-center mt-12">
-            {" "}
-            {/* Added flex justify-center */}
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-[220px] rounded">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-[220px] rounded"
+              onClick={handleSubmit}
+            >
               Submit
             </button>
           </div>
@@ -141,29 +229,40 @@ const ImageAnalysisPage = () => {
             </p>
           </div>
 
-          {/* Double Layer Box with Content */}
-          <div
-            className="bg-white rounded-3xl p-2 mb-4 mx-auto"
-            style={{
-              width: "400px",
-              height: "350px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              className="bg-blue-200 rounded-lg p-4 flex flex-col items-center justify-center"
-              style={{ width: "340px", height: "230px" }}
-            >
-              <img src={UploadIcon} alt="Upload" className="h-12 w-16 mb-2" />
-              <p className="text-black mb-2 font-bold">Upload Image</p>
-              <p className="text-sm text-black">
-                Image size must be less than 5 MB
-              </p>
+          {/* Image Upload Box */}
+          <div className="bg-white rounded-3xl p-2 mb-4 mx-auto w-[400px] h-[350px] flex flex-col items-center justify-center">
+            <div className="bg-blue-200 rounded-lg p-4 flex flex-col items-center justify-center w-[340px] h-[230px]">
+              {image2 ? (
+                <img
+                  src={image2}
+                  alt="Uploaded"
+                  className="h-40 w-full object-cover rounded-lg"
+                />
+              ) : (
+                <>
+                  <img
+                    src={UploadIcon}
+                    alt="Upload"
+                    className="h-12 w-16 mb-2"
+                  />
+                  <p className="text-black mb-2 font-bold">Upload Image</p>
+                  <p className="text-sm text-black">
+                    Image size must be less than 5 MB
+                  </p>
+                </>
+              )}
             </div>
-            <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 w-[338px]">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              id="imageUpload2"
+              onChange={(e) => handleImageUpload(e, setImage2, setFile2)} // Added setFile2
+            />
+            <button
+              className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 w-[338px]"
+              onClick={() => document.getElementById("imageUpload2").click()}
+            >
               Select Image
             </button>
           </div>
@@ -173,48 +272,37 @@ const ImageAnalysisPage = () => {
             <input
               type="text"
               placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="border border-gray-300 p-2 rounded-lg w-full mb-2 bg-white text-gray-400"
-              style={{ maxWidth: "400px" }}
             />
             <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
               className="border border-gray-300 p-2 rounded-lg w-full mb-2 bg-white text-gray-400"
-              style={{ maxWidth: "400px" }}
             >
-              <option>Gender</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
+              <option value="">Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
             <input
               type="number"
               placeholder="Age"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
               className="border border-gray-300 p-2 rounded-lg w-full bg-white text-gray-400"
-              style={{ maxWidth: "400px" }}
             />
           </div>
-          {/*Submit Button  */}
+
+          {/* Submit Button */}
           <div className="flex justify-center mt-12">
-            {" "}
-            {/* Added flex justify-center */}
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-[220px] rounded">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-[220px] rounded"
+              onClick={handleSubmit}
+            >
               Submit
             </button>
-            {/* Result Box */}
-            <div
-              className="absolute left-1/2 bottom-[30px] transform -translate-x-1/2 
-    bg-white border border-blue-700 rounded-lg p-4 shadow-lg z-10
-    w-[90%] max-w-xs sm:max-w-md md:max-w-lg"
-            >
-              <p className="font-bold text-lg mb-2 text-center">
-                Result:{" "}
-                <span className="bg-white border border-blue-300 rounded-2xl px-2 py-1 text-blue-500">
-                  Name of the disease
-                </span>
-              </p>
-              <a href="#" className="text-blue-500 underline block text-center">
-                Nearby doctor recommendation??
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -223,3 +311,4 @@ const ImageAnalysisPage = () => {
 };
 
 export default ImageAnalysisPage;
+

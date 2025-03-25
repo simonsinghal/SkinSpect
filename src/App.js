@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './index.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Pages/Login';
@@ -12,13 +12,24 @@ import ImageAnalysis from './Pages/ImageAnalysis';
 import TextAnalysis from './Pages/TextAnalysis';
 import FindDoctor from './Pages/FindDoctor';
 import DoctorsResult from './Pages/DoctorsResult';
+import Dashboard from './Pages/Dashboard';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (storedUser) {
+      setCurrentUser(storedUser);
+    }
+  }, []);
+
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/features" element={<Features />} />
         <Route path="/about" element={<About />} />
@@ -28,6 +39,7 @@ function App() {
         <Route path="/textanalysis" element={<TextAnalysis />} />
         <Route path="/finddoctor" element={<FindDoctor />} />
         <Route path="/doctorsresult" element={<DoctorsResult/>} />
+        <Route path="/dashboard" element={<Dashboard userId={currentUser?.id} />} />
       </Routes>
     </Router>
   );

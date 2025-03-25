@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import Icon from "../Images/Icon.png";
 import Facebook from "../Images/Facebook.png";
 import Google from "../Images/Google.png";
 
-const Login = () => {
+const Login = ({ setCurrentUser }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -34,7 +34,9 @@ const Login = () => {
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
 
-            navigate("/dashboard");
+            setCurrentUser(data.user); // Update state with logged-in user
+
+            navigate("/dashboard"); // Redirect after login
         } catch (err) {
             setError(err.message);
         }
