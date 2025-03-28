@@ -1,28 +1,77 @@
-import React , { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
 import Icon from "../Images/Icon.png";
-import cross from '../Images/cross.png';
+import cross from "../Images/cross.png";
+import axios from "axios";
 
 const TextAnalysis = () => {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [symptomOptions, setSymptomOptions] = useState([
-    'Headache', 'Fever', 'Cough', 'Rash', 'Fatigue', 
-    'Nausea', 'Dizziness', 'Shortness of breath', 'Sore throat', 'Stomach ache'
-  ]); // Example symptom options
+    "Headache",
+    "Fever",
+    "Cough",
+    "Rash",
+    "Fatigue",
+    "Nausea",
+    "Dizziness",
+    "Shortness of breath",
+    "Sore throat",
+    "Stomach ache",
+  ]);
+  const [fullName, setFullName] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
 
   const handleSymptomSelect = (event) => {
     const symptom = event.target.value;
-    if (symptom && selectedSymptoms.length < 3 && !selectedSymptoms.includes(symptom)) {
+    if (
+      symptom &&
+      selectedSymptoms.length < 3 &&
+      !selectedSymptoms.includes(symptom)
+    ) {
       setSelectedSymptoms([...selectedSymptoms, symptom]);
     }
   };
 
   const handleRemoveSymptom = (symptomToRemove) => {
-    setSelectedSymptoms(selectedSymptoms.filter(symptom => symptom !== symptomToRemove));
+    setSelectedSymptoms(
+      selectedSymptoms.filter((symptom) => symptom !== symptomToRemove)
+    );
   };
+
+  const handleSubmit = async () => {
+    if (!fullName || !gender || !age || selectedSymptoms.length === 0) {
+      alert("Please fill in all fields and select at least one symptom.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/submit-text-analysis",
+        {
+          fullName,
+          gender,
+          age,
+          symptoms: selectedSymptoms,
+        }
+      );
+
+      if (response.data.message === "Data saved successfully") {
+        alert("Submission successful!");
+        setFullName("");
+        setGender("");
+        setAge("");
+        setSelectedSymptoms([]);
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      alert("Submission failed. Please try again.");
+    }
+  };
+
   return (
     <div className="font-montserrat">
       {/* Navbar */}
@@ -82,60 +131,75 @@ const TextAnalysis = () => {
           Mention the symptoms faced in the skin disease
         </p>
 
-{/* Symptom Box */}
-<div className="bg-white rounded-3xl p-8 shadow-lg w-full max-w-2xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="text"
-          placeholder="Full Name"
-          className="border rounded-md p-2 bg-blue-500 text-white placeholder-white"
-        />
-        <select 
-          className="border rounded-md p-2 bg-blue-500 text-white "
-          onChange={handleSymptomSelect}
-        >
-          <option value="">Symptoms</option>
-          {symptomOptions.map((symptom, index) => (
-            <option key={index} value={symptom}>{symptom}</option>
-          ))}
-        </select>
-        <select className="border rounded-md p-2 bg-blue-500 text-white">
-          <option>Gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-        </select>
-        <div className="flex flex-col gap-2 bg-blue-100 rounded-md p-2">
-          {selectedSymptoms.map((symptom, index) => (
-            <div key={index} className="flex items-center gap-2 border rounded-md p-2 bg-white">
-              <span className="flex-grow">{symptom}</span>
-              <button onClick={() => handleRemoveSymptom(symptom)}>
-                <img src={cross} alt="Remove" className="h-4 w-4" />
-              </button>
+        {/* Symptom Box */}
+        <div className="bg-white rounded-3xl p-8 shadow-lg w-full max-w-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="border rounded-md p-2 bg-blue-500 text-white placeholder-white"
+            />
+            <select
+              className="border rounded-md p-2 bg-blue-500 text-white"
+              onChange={handleSymptomSelect}
+            >
+              <option value="">Symptoms</option>
+              {symptomOptions.map((symptom, index) => (
+                <option key={index} value={symptom}>
+                  {symptom}
+                </option>
+              ))}
+            </select>
+            <select className="border rounded-md p-2 bg-blue-500 text-white"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            >
+              <option>Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+            {/* Constrained height and scrolling for selected symptoms */}
+            <div className="border rounded-md p-2 bg-blue-100 max-h-14 overflow-y-auto">
+              {selectedSymptoms.map((symptom, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 border rounded-md p-2 bg-white mb-2"
+                >
+                  <span className="flex-grow">{symptom}</span>
+                  <button onClick={() => handleRemoveSymptom(symptom)}>
+                    <img src={cross} alt="Remove" className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
+            <input
+              type="number"
+              placeholder="Age"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              className="border rounded-md p-2 bg-blue-500 text-white placeholder-white"
+            />
+          </div>
+
+          <div className="flex justify-center mt-6">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
+
+          <p className="text-xs text-center mt-4">
+            *You can select upto 3 symptoms only
+            <br />
+            **Make sure to enter your correct details in name, gender and age
+            criteria for better results
+          </p>
         </div>
-        <input
-          type="number"
-          placeholder="Age"
-          className="border rounded-md p-2 bg-blue-500 text-white placeholder-white"
-        />
-      </div>
-
-      <div className="flex justify-center mt-6">
-        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
-          Submit
-        </button>
-      </div>
-
-      <p className="text-xs text-center mt-4">
-        *You can select upto 3 symptoms only
-        <br />
-        **Make sure to enter your correct details in name, gender and age
-        criteria for better results
-      </p>
-    </div>
-
 
         {/* Result Box */}
         <div className="bg-white border border-gray-300 rounded-lg p-4 mt-8 w-full max-w-2xl text-center">
