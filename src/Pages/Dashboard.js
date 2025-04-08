@@ -6,32 +6,50 @@ import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-const Dashboard = ({ userId }) => {
+const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("Profile");
   const [scans, setScans] = useState([]);
-  const [loading, setLoading] = useState(true); // Add a loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [userId, setUserId] = useState(null); // Add userId state
 
   useEffect(() => {
-    if (!userId) return;
-  
-    const fetchScans = async () => {
-      setLoading(true);
+    const token = localStorage.getItem("token");
+    if (token) {
       try {
-        const response = await axios.get(`http://localhost:5000/api/scans/${userId}`);
-        console.log("Fetched Scans:", response.data);
-        setScans(response.data);
+        const decodedToken = jwtDecode(token);
+        const retrievedUserId =
+          decodedToken.userId || decodedToken.id || decodedToken._id;
+        setUserId(retrievedUserId);
+        console.log("Dashboard UserID:", retrievedUserId);
       } catch (error) {
-        console.error("Error fetching scans:", error);
-      } finally {
-        setLoading(false); 
+        console.error("Error decoding token:", error);
       }
-    };
-  
-    fetchScans();
+    }
+  }, []); // Run once to decode token and set userId
+
+  useEffect(() => {
+    if (userId) {
+      const fetchScans = async () => {
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/api/scans/${userId}`
+          );
+          console.log("Fetched Scans:", response.data);
+          setScans(response.data);
+        } catch (error) {
+          console.error("Error fetching scans:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchScans();
+    }
   }, [userId]);
-  
 
   return (
     <div className="font-montserrat">
@@ -367,40 +385,56 @@ const Dashboard = ({ userId }) => {
                       </p>
 
                       <div className="overflow-x-auto mt-4">
-                      <table className="min-w-full border border-gray-300 rounded-lg">
-  <thead>
-    <tr className="bg-blue-700 text-white">
-      <th className="px-4 py-2">S.No</th>
-      <th className="px-4 py-2">Details</th>
-      <th className="px-4 py-2">Images/Symptoms</th>
-      <th className="px-4 py-2">Diseases Predicted</th>
-    </tr>
-  </thead>
-  <tbody>
-    {scans.map((scan, index) => (
-      <tr key={index} className="border-b text-center">
-        <td className="px-4 py-2">{index + 1}</td>
-        <td className="px-4 py-2">
-          {scan.name}, {scan.age}, {scan.gender}
-        </td>
-        <td className="px-4 py-2 flex justify-center gap-2">
-          {scan.images.map((image, imgIndex) => (
-            <img
-              key={imgIndex}
-              src={`http://localhost:5000/${image}`} // Ensure the correct image path
-              alt="Symptom"
-              className="w-16 h-16 object-cover rounded"
-            />
-          ))}
-        </td>
-        <td className="px-4 py-2 text-blue-600">
-          {scan.result || "Pending..."}
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+                        <table className="min-w-full border border-gray-300 rounded-lg">
+                          <thead>
+                            <tr className="bg-blue-700 text-white">
+                              <th className="px-4 py-2">S.No</th>
+                              <th className="px-4 py-2">Details</th>
+                              <th className="px-4 py-2">Images/Symptoms</th>
+                              <th className="px-4 py-2">Diseases Predicted</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {scans.map((scan, index) => (
+                              <tr key={index} className="border-b text-center">
+                                <td className="px-4 py-2">{index + 1}</td>
 
+                                <td className="px-4 py-2">
+                                  {scan.name || "N/A"}, {scan.age || "N/A"},{" "}
+                                  {scan.gender || "N/A"}
+                                </td>
+
+                                <td className="px-4 py-2 flex justify-center gap-2">
+                                  {/* Handle images array */}
+                                  {scan.images && scan.images.length > 0 ? (
+                                    scan.images.map((image, imgIndex) => (
+                                      <img
+                                        key={imgIndex}
+                                        src={`http://localhost:5000/${image}`}
+                                        alt="Symptom"
+                                        className="w-16 h-16 object-cover rounded"
+                                      />
+                                    ))
+                                  ) : scan.imageUrl ? (
+                                    // Handle imageUrl string
+                                    <img
+                                      src={scan.imageUrl}
+                                      alt="Symptom"
+                                      className="w-16 h-16 object-cover rounded"
+                                    />
+                                  ) : (
+                                    // Fallback
+                                    <span>No image</span>
+                                  )}
+                                </td>
+
+                                <td className="px-4 py-2 text-blue-600">
+                                  {scan.result || "Pending..."}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   )}

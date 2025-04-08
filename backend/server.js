@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const scanRoutes = require('./routes/scanRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const textRoutes = require('./routes/textRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/scans', scanRoutes); 
 app.use('/api/upload', uploadRoutes);
 app.use('/api', textRoutes);
+app.use('/api/dashboard', dashboardRoutes); 
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

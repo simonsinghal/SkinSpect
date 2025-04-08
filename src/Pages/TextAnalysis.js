@@ -6,20 +6,52 @@ import BackgroundImage from "../Images/BackgroundImage.png";
 import Icon from "../Images/Icon.png";
 import cross from "../Images/cross.png";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const TextAnalysis = () => {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [symptomOptions, setSymptomOptions] = useState([
-    "Headache",
-    "Fever",
-    "Cough",
-    "Rash",
-    "Fatigue",
-    "Nausea",
-    "Dizziness",
-    "Shortness of breath",
-    "Sore throat",
-    "Stomach ache",
+    "Pimples",
+    "Blackheads",
+    "Whiteheads",
+    "Pustules",
+    "Cysts",
+    "Rough Skin",
+    "Scaly Patches",
+    "Itching",
+    "Burning",
+    "Cracked Skin",
+    "Inflamed Skin",
+    "Oozing",
+    "Thickened Skin",
+    "Blisters",
+    "Redness",
+    "Swelling",
+    "Pain",
+    "Warmth",
+    "Dryness",
+    "Scaling",
+    "Hives",
+    "Ulcers",
+    "Joint Pain",
+    "Hair Loss",
+    "Asymmetry",
+    "Irregular Color",
+    "Diameter Changes",
+    "Evolving",
+    "Pitting",
+    "Joint Issues",
+    "Growth",
+    "Lump",
+    "Color Change",
+    "Circular Rash",
+    "Raised Skin",
+    "Clearing",
+    "Welts",
+    "Blanching",
+    "Red",
+    "Purple",
+    "Varied Growth",
   ]);
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
@@ -43,6 +75,31 @@ const TextAnalysis = () => {
   };
 
   const handleSubmit = async () => {
+    let userId = null;
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        userId = decodedToken.userId || decodedToken.id || decodedToken._id; // Adjust based on your JWT payload
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        alert("Authentication error. Please log in again.");
+        return;
+      }
+    } else {
+      alert("Please log in to submit data");
+      return;
+    }
+
+    console.log("Form Data:", {
+      fullName,
+      gender,
+      age,
+      symptoms: selectedSymptoms,
+      userId: userId,
+    });
+
     if (!fullName || !gender || !age || selectedSymptoms.length === 0) {
       alert("Please fill in all fields and select at least one symptom.");
       return;
@@ -56,8 +113,11 @@ const TextAnalysis = () => {
           gender,
           age,
           symptoms: selectedSymptoms,
+          userId: userId,
         }
       );
+
+      console.log("Response:", response.data);
 
       if (response.data.message === "Data saved successfully") {
         alert("Submission successful!");
@@ -152,9 +212,10 @@ const TextAnalysis = () => {
                 </option>
               ))}
             </select>
-            <select className="border rounded-md p-2 bg-blue-500 text-white"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
+            <select
+              className="border rounded-md p-2 bg-blue-500 text-white"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
             >
               <option>Gender</option>
               <option>Male</option>

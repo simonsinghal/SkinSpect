@@ -13,6 +13,7 @@ import TextAnalysis from './Pages/TextAnalysis';
 import FindDoctor from './Pages/FindDoctor';
 import DoctorsResult from './Pages/DoctorsResult';
 import Dashboard from './Pages/Dashboard';
+import Admin from './Pages/Admin';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -40,6 +41,7 @@ function App() {
         <Route path="/finddoctor" element={<FindDoctor />} />
         <Route path="/doctorsresult" element={<DoctorsResult/>} />
         <Route path="/dashboard" element={<Dashboard userId={currentUser?.id} />} />
+        <Route path = "/admin/*" element={<Admin/>} />
       </Routes>
     </Router>
   );

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import Logo from "../Images/Logo.png";
 import Icon from "../Images/Icon.png";
@@ -19,11 +19,16 @@ import cust3 from "../Images/cust3.png";
 
 const About = () => {
   const section3Ref = useRef(null);
+  const navigate = useNavigate();
 
   const scrollToSection3 = () => {
     if (section3Ref.current) {
       section3Ref.current.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleRedirect = () => {
+    navigate("/login"); // Redirect to the login page
   };
 
   return (
@@ -92,7 +97,9 @@ const About = () => {
                 fast, accurate, and accessible skin disease detection. Our goal
                 is to empower individuals to take control of their skin health.
               </p>
-              <button className="bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600">
+              <button 
+              onClick={handleRedirect}
+              className="bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600">  
                 Analyze Your Skin Now
               </button>
             </div>
@@ -228,94 +235,97 @@ const About = () => {
 
         {/* Section 5: Team Section */}
         <section className="py-12 px-6 md:px-24 w-full bg-gray-50">
-  <div className="container mx-auto">
-    {/* Heading */}
-    <h2 className="text-4xl font-bold text-blue-900 mb-8 text-center">
-      What People Are Saying
-    </h2>
+          <div className="container mx-auto">
+            {/* Heading */}
+            <h2 className="text-4xl font-bold text-blue-900 mb-8 text-center">
+              What People Are Saying
+            </h2>
 
-    {/* Reviews Container */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {/* Review 1 */}
-      <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-        <div className="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-blue-500">
-          <img
-            src={cust1}
-            alt="Customer 1"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <p className="text-gray-600 italic text-center">
-          "Skinspect helped me detect a skin issue early. The AI
-          analysis was fast and accurate!"
-        </p>
-      </div>
+            {/* Reviews Container */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Review 1 */}
+              <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div className="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-blue-500">
+                  <img
+                    src={cust1}
+                    alt="Customer 1"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-gray-600 italic text-center">
+                  "Skinspect helped me detect a skin issue early. The AI
+                  analysis was fast and accurate!"
+                </p>
+              </div>
 
-      {/* Review 2 */}
-      <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-        <div className="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-blue-500">
-          <img
-            src={cust2}
-            alt="Customer 2"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <p className="text-gray-600 italic text-center">
-          "Amazing tool! It gave me insights about my skin condition
-          before my doctor's visit."
-        </p>
-      </div>
+              {/* Review 2 */}
+              <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div className="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-blue-500">
+                  <img
+                    src={cust2}
+                    alt="Customer 2"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-gray-600 italic text-center">
+                  "Amazing tool! It gave me insights about my skin condition
+                  before my doctor's visit."
+                </p>
+              </div>
 
-      {/* Review 3 */}
-      <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-        <div className="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-blue-500">
-          <img
-            src={cust3}
-            alt="Customer 3"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <p className="text-gray-600 italic text-center">
-          "The AI diagnosis was surprisingly accurate. I highly
-          recommend this app!"
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+              {/* Review 3 */}
+              <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div className="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-blue-500">
+                  <img
+                    src={cust3}
+                    alt="Customer 3"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-gray-600 italic text-center">
+                  "The AI diagnosis was surprisingly accurate. I highly
+                  recommend this app!"
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Section 6: Contact Query Section */}
         <section className="py-12 px-6 md:px-24 w-full bg-blue-100">
-  <div className="container mx-auto">
-    <div className="text-left">
-      <h2 className="text-4xl font-bold mb-4">Your Query</h2>
-      <form className="md:w-full"> {/* Set form width to half of parent's width on medium screens */}
-        <input
-          type="text"
-          placeholder="Your Name"
-          className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="email"
-          placeholder="Your Email"
-          className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <textarea
-          placeholder="Your Message"
-          className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 w-full" // w-full for button
-        >
-          Submit
-        </button>
-      </form>
-    </div>
-  </div>
-</section>
+          <div className="container mx-auto">
+            <div className="text-left">
+              <h2 className="text-4xl font-bold mb-4">Your Query</h2>
 
 
+              <form className="md:w-full">
+                {" "}
+                {/* Set form width to half of parent's width on medium screens */}
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <textarea
+                  placeholder="Your Message"
+                  className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                ></textarea>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 w-full" // w-full for button
+                >
+                  Submit
+                </button>
+              </form>
+              
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />

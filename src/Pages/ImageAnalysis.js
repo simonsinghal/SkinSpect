@@ -5,6 +5,7 @@ import Skinspect from "../Images/Skinspect.png";
 import UploadIcon from "../Images/uploadIcon.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode';
 
 const ImageAnalysisPage = () => {
   const [image1, setImage1] = useState(null);
@@ -34,16 +35,34 @@ const handleSubmit = async (event) => {
   }
 
   if (!fullName || !gender || !age) {
-    alert("Please fill in all fields and provide image"); //changed message
+    alert("Please fill in all fields and provide image"); 
     return;
   }
 
+  let userId = null;
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        userId = decodedToken.userId || decodedToken.id || decodedToken._id;
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        alert("Authentication error. Please log in again.");
+        return;
+      }
+    } else {
+      alert("Please log in to submit data");
+      return;
+    }
+
   const formData = new FormData();
-  if (file1) formData.append("image1", file1); // Changed key name to image1 and image2
+  if (file1) formData.append("image1", file1);
   if (file2) formData.append("image2", file2);
-  formData.append("fullName", fullName); // Changed from userId to fullName
+  formData.append("fullName", fullName); 
   formData.append("gender", gender);
   formData.append("age", age);
+  formData.append("userId", userId); 
 
   console.log("[handleSubmit] Starting upload process...");
   console.log("[handleSubmit] FormData contents:");
@@ -53,7 +72,7 @@ const handleSubmit = async (event) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/upload", // Corrected route.  Make sure this matches your backend route
+      "http://localhost:5000/api/upload", 
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
