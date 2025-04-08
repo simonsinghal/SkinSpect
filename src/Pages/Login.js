@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import Icon from "../Images/Icon.png";
@@ -36,7 +36,13 @@ const Login = ({ setCurrentUser }) => {
 
             setCurrentUser(data.user); // Update state with logged-in user
 
-            navigate("/dashboard"); // Redirect after login
+            // Check user role and redirect accordingly
+            if (data.user && (data.user.role === 'admin' || data.user.isAdmin === true)) {
+                navigate("/admin");
+            } else {
+                navigate("/dashboard");
+            }
+
         } catch (err) {
             setError(err.message);
         }

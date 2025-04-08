@@ -35,7 +35,6 @@ const register = async (req, res) => {
     
 }
 
-
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -55,7 +54,7 @@ const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user._id },
+            { userId: user._id, role: user.role }, // Include the role in the token payload
             process.env.JWT_SECRET || 'your-secret-key',
             { expiresIn: '24h' }
         );
@@ -65,10 +64,12 @@ const login = async (req, res) => {
             user: {
                 id: user._id,
                 fullName: user.fullName,
-                email: user.email
+                email: user.email,
+                role: user.role // Include the role in the user object in the response
             }
         });
     } catch (error) {
+        console.error("Login error:", error);
         res.status(500).json({ error: 'Server error' });
     }
 };
