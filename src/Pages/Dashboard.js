@@ -13,7 +13,59 @@ const Dashboard = () => {
   const [scans, setScans] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [userId, setUserId] = useState(null); // Add userId state
+  const [userId, setUserId] = useState(null);
+  const [profileData, setProfileData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    location: {
+      pinCode: "",
+      country: "",
+      state: "",
+      city: "",
+    },
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (["pinCode", "country", "state", "city"].includes(name)) {
+      setProfileData((prev) => ({
+        ...prev,
+        location: {
+          ...prev.location,
+          [name]: value,
+        },
+      }));
+    } else {
+      setProfileData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token"); 
+
+      const response = await axios.put(
+        "http://localhost:5000/api/auth/update-profile", 
+        profileData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Profile update failed:", err);
+      alert("Failed to update profile.");
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,7 +80,7 @@ const Dashboard = () => {
         console.error("Error decoding token:", error);
       }
     }
-  }, []); // Run once to decode token and set userId
+  }, []);
 
   useEffect(() => {
     if (userId) {
@@ -209,6 +261,7 @@ const Dashboard = () => {
               {activeTab === "Profile" && (
                 <div className="mt-4">
                   <div className="grid grid-cols-1 gap-6">
+                    {/* Name */}
                     <div className="flex items-center justify-start">
                       <label
                         className="mr-4"
@@ -221,11 +274,17 @@ const Dashboard = () => {
                         Name:
                       </label>
                       <input
+                        name="name"
                         type="text"
                         placeholder="Name"
+                        value={profileData.name}
+                        onChange={handleChange}
+                        autoComplete="off"
                         className="border rounded-full p-2 bg-blue-600 text-white h-10 placeholder-white w-full flex-1"
                       />
                     </div>
+
+                    {/* Email */}
                     <div className="flex items-center justify-start">
                       <label
                         className="mr-4"
@@ -238,11 +297,17 @@ const Dashboard = () => {
                         Email:
                       </label>
                       <input
+                        name="email"
                         type="email"
                         placeholder="Email"
+                        value={profileData.email}
+                        onChange={handleChange}
+                        autoComplete="off"
                         className="border rounded-full p-2 bg-blue-600 text-white h-10 placeholder-white w-max flex-1"
                       />
                     </div>
+
+                    {/* Phone Number */}
                     <div className="flex items-center justify-start">
                       <label
                         className="mr-4"
@@ -255,11 +320,17 @@ const Dashboard = () => {
                         Phone No:
                       </label>
                       <input
+                        name="phone"
                         type="tel"
                         placeholder="Phone No."
+                        value={profileData.phone}
+                        onChange={handleChange}
+                        autoComplete="off"
                         className="border rounded-full p-2 bg-blue-600 text-white h-10 placeholder-white w-max flex-1"
                       />
                     </div>
+
+                    {/* Password */}
                     <div className="flex items-center justify-start">
                       <label
                         className="mr-4"
@@ -273,8 +344,12 @@ const Dashboard = () => {
                       </label>
                       <div className="relative w-max flex-1">
                         <input
+                          name="password"
                           type="password"
                           placeholder=" "
+                          value={profileData.password}
+                          onChange={handleChange}
+                          autoComplete="off"
                           className="border rounded-full p-2 pr-10 bg-blue-600 text-white h-10 placeholder-white w-full"
                         />
                         <span className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -301,6 +376,8 @@ const Dashboard = () => {
                         </span>
                       </div>
                     </div>
+
+                    {/* Location */}
                     <div className="flex items-center justify-start col-span-1">
                       <label
                         className="mr-4"
@@ -317,26 +394,38 @@ const Dashboard = () => {
                         style={{ flex: "2" }}
                       >
                         <input
+                          name="pinCode"
                           type="text"
                           placeholder="Pin Code"
+                          value={profileData.pinCode}
+                          onChange={handleChange}
                           className="border rounded-full p-2 bg-blue-600 text-white h-10 placeholder-white w-1/2"
                           style={{ width: "calc(40% - 4px)" }}
                         />
                         <input
+                          name="country"
                           type="text"
                           placeholder="Country"
+                          value={profileData.country}
+                          onChange={handleChange}
                           className="border rounded-full p-2 bg-blue-600 text-white h-10 placeholder-white w-1/2"
                           style={{ width: "calc(40% - 4px)" }}
                         />
                         <input
+                          name="state"
                           type="text"
                           placeholder="State"
+                          value={profileData.state}
+                          onChange={handleChange}
                           className="border rounded-full p-2 bg-blue-600 text-white h-10 placeholder-white w-1/2"
                           style={{ width: "calc(40% - 4px)" }}
                         />
                         <input
+                          name="city"
                           type="text"
                           placeholder="City"
+                          value={profileData.city}
+                          onChange={handleChange}
                           className="border rounded-full p-2 bg-blue-600 text-white h-10 placeholder-white w-1/2"
                           style={{ width: "calc(40% - 4px)" }}
                         />
@@ -344,8 +433,13 @@ const Dashboard = () => {
                     </div>
                   </div>
 
+                  {/* Save Button */}
                   <div className="mt-8 flex justify-center">
-                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold mt-10 py-2 px-4 rounded-xl">
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold mt-10 py-2 px-4 rounded-xl"
+                    >
                       Save Changes
                     </button>
                   </div>

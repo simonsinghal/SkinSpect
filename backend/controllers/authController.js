@@ -54,7 +54,7 @@ const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user._id, role: user.role }, // Include the role in the token payload
+            { userId: user._id, role: user.role }, 
             process.env.JWT_SECRET || 'your-secret-key',
             { expiresIn: '24h' }
         );
@@ -65,7 +65,7 @@ const login = async (req, res) => {
                 id: user._id,
                 fullName: user.fullName,
                 email: user.email,
-                role: user.role // Include the role in the user object in the response
+                role: user.role 
             }
         });
     } catch (error) {
@@ -74,4 +74,37 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+const updateProfile = async (req, res) => {
+    try {
+        const { fullName, email, phone, password, location } = req.body;
+        const userId = req.user.userId; 
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        if (fullName) user.fullName = fullName;
+        if (email) user.email = email;
+        if (phone) user.phone = phone;
+
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;
+        }
+
+        if (location) {
+            user.location = {
+                ...user.location,
+                ...location,
+            };
+        }
+
+        await user.save();
+
+        res.json({ message: 'Profile updated successfully', user });
+    } catch (error) {
+        console.error("Profile update error:", error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+
+module.exports = { register, login, updateProfile };

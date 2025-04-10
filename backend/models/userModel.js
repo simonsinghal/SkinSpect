@@ -18,10 +18,20 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
+    phone: {
+        type: String,
+        trim: true
+    },
+    location: {
+        pinCode: String,
+        country: String,
+        state: String,
+        city: String
+    },
     role: {
         type: String,
-        enum: ['user', 'admin'], 
-        default: 'user' 
+        enum: ['user', 'admin'],
+        default: 'user'
     }
 }, {
     timestamps: true

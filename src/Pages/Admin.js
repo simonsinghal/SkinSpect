@@ -8,7 +8,9 @@ import AIManagement from "./Admin/AIManagement";
 import FeedbackSupport from "./Admin/FeedbackSupport";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
-import BackgroundImage from "../Images/BackgroundImage.png"; // Import background image here
+import BackgroundImage from "../Images/BackgroundImage.png";
+import image1 from "../Images/admin1.png";
+import image2 from "../Images/admin2.png";
 
 const Admin = () => {
   const location = useLocation();
@@ -94,20 +96,43 @@ const Admin = () => {
         </nav>
       </aside>
 
-      {/* Main Content Area with Background */}
       <main
-        className="flex-1 p-8 bg-cover bg-center"
-        style={{ backgroundImage: `url(${BackgroundImage})` }}
-      >
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/users" element={<UserManagement />} />
-          <Route path="/content" element={<ContentManagement />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/aimanagement" element={<AIManagement />} />
-          <Route path="/feedback" element={<FeedbackSupport />} />
-        </Routes>
-      </main>
+  className="flex-1 p-8 bg-cover bg-center"
+  style={{ backgroundImage: `url(${BackgroundImage})` }}
+>
+  {/* Conditionally render welcome only on /admin */}
+  {location.pathname === "/admin" && (
+    <>
+      <div className="w-full flex justify-center mb-8 mt-10">
+        <h1 className="text-white text-5xl font-bold">WELCOME TO ADMIN PANEL</h1>
+      </div>
+
+      <div className="flex w-full justify-start pl-52 mt-28 space-x-16">
+        <img
+          src={image2}
+          alt="Admin Panel Interface"
+          className="w-1/3 rounded-md shadow-md"
+        />
+        <img
+          src={image1}
+          alt="Database Data Snippet"
+          className="w-1/3 rounded-md shadow-md"
+        />
+      </div>
+    </>
+  )}
+
+  {/* Routes to different admin components */}
+  <Routes>
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/users" element={<UserManagement />} />
+    <Route path="/content" element={<ContentManagement />} />
+    <Route path="/analytics" element={<Analytics />} />
+    <Route path="/aimanagement" element={<AIManagement />} />
+    <Route path="/feedback" element={<FeedbackSupport />} />
+  </Routes>
+</main>
+
     </div>
   );
 };
