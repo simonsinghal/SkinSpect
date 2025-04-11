@@ -13,6 +13,7 @@ const diseaseRoutes = require('./routes/diseaseRoutes');
 const app = express();
 
 // Connect to MongoDB
+require("dotenv").config();
 connectDB();
 
 // Middleware

@@ -1,40 +1,41 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/userModel'); // Import your User model
-const secretKey = 'yourSecretKey'; // Keep this VERY secure!  Move to a config file.
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
+const secretKey = process.env.JWT_SECRET;
+
 
 const requireAdminAuth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
+    console.log("Authorization Header:", authHeader); // DEBUG
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Authentication required' });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Authentication required" });
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, secretKey);
+    const user = await User.findById(decoded.userId);
 
-    jwt.verify(token, secretKey, async (err, decoded) => {
-      if (err) {
-        console.error("Token verification error:", err);
-        return res.status(401).json({ error: 'Invalid token' });
-      }
+    if (!user) {
+      return res.status(401).json({ error: "Invalid token: User not found" });
+    }
 
-      // Token is valid, check if user exists and is an admin
-      const user = await User.findById(decoded.userId); //  'decoded.userId'  depends on what you store in the token
-      if (!user) {
-        return res.status(401).json({ error: 'Invalid token: User not found' }); // Or token expired
-      }
+    if (user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized: Admin access required" });
+    }
 
-      if (user.role !== 'admin') {
-        return res.status(403).json({ error: 'Unauthorized: Admin access required' }); // Forbidden
-      }
+    // Now safe to log
+    console.log("TOKEN:", token);
+    console.log("DECODED:", decoded);
+    console.log("USER FROM DB:", user);
 
-      // User is an admin, attach user object to request
-      req.user = user;
-      next();
-    });
+    req.user = user;
+    next();
   } catch (error) {
-    console.error("Error in requireAdminAuth:", error);
-    return res.status(500).json({ error: 'Server error' });
+    console.error("Error in requireAdminAuth:", error.message);
+    return res.status(401).json({ error: "Invalid or expired token" });
   }
 };
 

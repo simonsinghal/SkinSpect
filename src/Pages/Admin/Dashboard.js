@@ -39,7 +39,7 @@ const Dashboard = () => {
           { headers }
         );
         const activityData = await activityResponse.json();
-        setRecentActivity(activityData || []);
+        setRecentActivity(Array.isArray(activityData) ? activityData : []);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       }
