@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const Activity = require('../models/activityModel.js'); 
 
 const router = express.Router();
 
@@ -8,12 +9,12 @@ const router = express.Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dest = './uploads/';
-    console.log(`[Multer] Destination: ${dest}`); // Added logging
+    console.log(`[Multer] Destination: ${dest}`);
     cb(null, dest);
   },
   filename: (req, file, cb) => {
     const filename = file.fieldname + '-' + Date.now() + path.extname(file.originalname);
-    console.log(`[Multer] Filename: ${filename}`); // Added logging
+    console.log(`[Multer] Filename: ${filename}`);
     cb(null, filename);
   }
 });
@@ -24,7 +25,7 @@ const fileFilter = (req, file, cb) => {
   const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimeType = allowedTypes.test(file.mimetype);
 
-  console.log(`[Multer] File: ${file.originalname}, extName: ${extName}, mimeType: ${mimeType}`); // Added logging
+  console.log(`[Multer] File: ${file.originalname}, extName: ${extName}, mimeType: ${mimeType}`);
 
   if (extName && mimeType) {
     cb(null, true);
@@ -42,18 +43,15 @@ const upload = multer({
 });
 
 // Route to handle image uploads
-router.post('/', upload.fields([  // Changed to upload.fields()
+router.post('/', upload.fields([
   { name: 'image1', maxCount: 1 },
   { name: 'image2', maxCount: 1 },
-]), (req, res) => {
+]), async (req, res) => {
   console.log('[/api/upload] Received request');
   console.log('[/api/upload] Request body:', req.body);
   console.log('[/api/upload] Request files:', req.files);
 
   try {
-    // --------------------------------------------------------
-    // Server-Side Validation (CRITICAL)
-    // --------------------------------------------------------
     const { fullName, gender, age } = req.body;
 
     if (!fullName || !gender || !age) {
@@ -71,36 +69,52 @@ router.post('/', upload.fields([  // Changed to upload.fields()
       console.warn('[/api/upload] No images uploaded');
       return res.status(400).json({ error: 'Bad Request', message: 'At least one image is required (image1 or image2)' });
     }
-    // File validation (example, adjust as needed)
-    if (req.files.image1) {
-        if (!req.files.image1[0].mimetype.startsWith('image/'))
-        {
-          return res.status(400).json({ error: 'Bad Request', message: 'image1 is not a valid image file' });
-        }
-    }
-     if (req.files.image2) {
-        if (!req.files.image2[0].mimetype.startsWith('image/'))
-        {
-          return res.status(400).json({ error: 'Bad Request', message: 'image2 is not a valid image file' });
-        }
+
+    if (req.files.image1 && !req.files.image1[0].mimetype.startsWith('image/')) {
+      return res.status(400).json({ error: 'Bad Request', message: 'image1 is not a valid image file' });
     }
 
-    // --------------------------------------------------------
-    // File Handling (if validation passes)
-    // --------------------------------------------------------
+    if (req.files.image2 && !req.files.image2[0].mimetype.startsWith('image/')) {
+      return res.status(400).json({ error: 'Bad Request', message: 'image2 is not a valid image file' });
+    }
+
+    // Process image URLs
     const imageUrls = [];
+    let firstUploadedFilename = '';
+
     if (req.files.image1) {
-      imageUrls.push(`/uploads/${req.files.image1[0].filename}`);
+      const filename = req.files.image1[0].filename;
+      imageUrls.push(`/uploads/${filename}`);
+      firstUploadedFilename = filename;
     }
+
     if (req.files.image2) {
-      imageUrls.push(`/uploads/${req.files.image2[0].filename}`);
+      const filename = req.files.image2[0].filename;
+      imageUrls.push(`/uploads/${filename}`);
+      if (!firstUploadedFilename) {
+        firstUploadedFilename = filename;
+      }
     }
+
     console.log('[/api/upload] Image URLs:', imageUrls);
+
+    // ✅ Log the activity
+    try {
+      await Activity.create({
+        userId: req.user._id, // ✅ Ensure authentication middleware adds req.user
+        activityType: 'Image Analysis Submitted',
+        imageFilename: firstUploadedFilename,
+      });
+      console.log("[/api/upload] Activity logged successfully.");
+    } catch (activityErr) {
+      console.error("[/api/upload] Failed to log activity:", activityErr);
+    }
 
     res.status(200).json({
       message: 'Files uploaded successfully',
       imageUrls: imageUrls,
     });
+
   } catch (error) {
     console.error('[/api/upload] Error handling upload:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });

@@ -61,7 +61,7 @@ const TextAnalysis = () => {
     const symptom = event.target.value;
     if (
       symptom &&
-      selectedSymptoms.length < 3 &&
+      selectedSymptoms.length < 5 &&
       !selectedSymptoms.includes(symptom)
     ) {
       setSelectedSymptoms([...selectedSymptoms, symptom]);
@@ -81,7 +81,7 @@ const TextAnalysis = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        userId = decodedToken.userId || decodedToken.id || decodedToken._id; // Adjust based on your JWT payload
+        userId = decodedToken.userId || decodedToken.id || decodedToken._id;
       } catch (error) {
         console.error("Error decoding token:", error);
         alert("Authentication error. Please log in again.");
@@ -120,7 +120,24 @@ const TextAnalysis = () => {
       console.log("Response:", response.data);
 
       if (response.data.message === "Data saved successfully") {
-        alert("Submission successful!");
+        alert("Submission successful!"); // Record activity log for text analysis
+
+        try {
+          await axios.post("http://localhost:5000/api/activity-log", {
+            userId: userId,
+            activityType: "Text Analysis Submitted",
+            details: {
+              fullName: fullName,
+              gender: gender,
+              age: age,
+              symptoms: selectedSymptoms,
+            },
+          });
+          console.log("Activity log recorded for text analysis.");
+        } catch (activityLogError) {
+          console.error("Error recording activity log:", activityLogError); // Optionally handle this error
+        }
+
         setFullName("");
         setGender("");
         setAge("");
@@ -132,6 +149,7 @@ const TextAnalysis = () => {
     }
   };
 
+  
   return (
     <div className="font-montserrat">
       {/* Navbar */}
@@ -255,7 +273,7 @@ const TextAnalysis = () => {
           </div>
 
           <p className="text-xs text-center mt-4">
-            *You can select upto 3 symptoms only
+            *You can select upto 5 symptoms only
             <br />
             **Make sure to enter your correct details in name, gender and age
             criteria for better results

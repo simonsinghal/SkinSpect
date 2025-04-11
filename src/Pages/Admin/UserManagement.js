@@ -7,36 +7,63 @@ const UserManagement = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        // Fetch user data and statistics from your backend API
         const fetchUserData = async () => {
             try {
-                // Replace with your actual API endpoints
-                const statsResponse = await fetch('http://localhost:5000/api/admin/users/stats');
+                const headers = {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                };
+    
+                const statsResponse = await fetch('http://localhost:5000/api/admin/users/stats', { headers });
                 const statsData = await statsResponse.json();
                 setTotalAccounts(statsData.totalAccounts || 0);
                 setTotalAdmins(statsData.totalAdmins || 0);
-
-                const usersResponse = await fetch('http://localhost:5000/api/admin/users');
+    
+                const usersResponse = await fetch('http://localhost:5000/api/admin/users', { headers });
                 const usersData = await usersResponse.json();
-                setUsers(usersData || []);
+    
+                if (Array.isArray(usersData)) {
+                    setUsers(usersData);
+                } else if (Array.isArray(usersData.users)) {
+                    setUsers(usersData.users);
+                } else {
+                    console.error('Unexpected user data format:', usersData);
+                    setUsers([]);
+                }
             } catch (error) {
                 console.error('Error fetching user data:', error);
-                // Handle error appropriately
+                setUsers([]);
             }
         };
-
+    
         fetchUserData();
     }, []);
+    
 
-    const handleDeleteUser = (userId) => {
-        // Implement your delete user logic here (API call, state update)
-        console.log(`Deleting user with ID: ${userId}`);
-        // After successful deletion, you might want to refetch user data
+    const handleDeleteUser = async (userId) => {
+        if (!window.confirm("Are you sure you want to delete this user?")) return;
+
+        try {
+            const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            if (res.ok) {
+                setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
+            } else {
+                console.error('Failed to delete user');
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
     };
 
     return (
         <div className="flex-1 p-8">
-            {/* Top Statistics and Add New User Button (Aligned) */}
             <div className="flex justify-between items-center mb-6">
                 <div className="flex gap-4">
                     <div className="bg-white shadow-md rounded-lg p-4 w-64 text-center">
@@ -53,36 +80,36 @@ const UserManagement = () => {
                 </Link>
             </div>
 
-            {/* User Details Table */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden flex-1 flex flex-col">
                 <div className="bg-gray-100 py-3 px-4 border-b border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-700">User Details</h2> {/* Moved heading inside */}
+                    <h2 className="text-lg font-semibold text-gray-700">User Details</h2>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-blue-700 text-white sticky top-0 z-10">
                             <tr>
-                                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">S. No.</th>
-                                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">Username</th>
-                                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">Email</th>
-                                <th className="px-6 py-3 text-left text-medium font-medium  tracking-wider">Password</th>
-                                <th className="px-6 py-3 text-left text-medium font-medium  tracking-wider">Role</th>
-                                <th className="px-6 py-3 text-right text-medium font-medium  tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left">S. No.</th>
+                                <th className="px-6 py-3 text-left">Full Name</th>
+                                <th className="px-6 py-3 text-left">Email</th>
+                                <th className="px-6 py-3 text-left">Role</th>
+                                <th className="px-6 py-3 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {users.map((user, index) => (
-                                <tr key={user.id}>
+                            {Array.isArray(users) && users.map((user, index) => (
+                                <tr key={user._id}>
                                     <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{user.username}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{user.fullName}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{"miu**********".substring(0, 3) + user.password.slice(3).replace(/./g, '*')}</td> {/* Masking password */}
-                                    <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap capitalize">{user.role}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                                        <Link to={`/admin/users/edit/${user.id}`} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2">
+                                        <Link to={`/admin/users/edit/${user._id}`} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2">
                                             Edit
                                         </Link>
-                                        <button onClick={() => handleDeleteUser(user.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                        <button
+                                            onClick={() => handleDeleteUser(user._id)}
+                                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                        >
                                             Delete
                                         </button>
                                     </td>
@@ -91,7 +118,7 @@ const UserManagement = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="px-4 py-3 bg-gray-100 text-sm text-gray-500 flex justify-end items-center"> {/* Aligned pagination to the right */}
+                <div className="px-4 py-3 bg-gray-100 text-sm text-gray-500 flex justify-end items-center">
                     <span>&lt; 1-10 &gt;</span>
                 </div>
             </div>

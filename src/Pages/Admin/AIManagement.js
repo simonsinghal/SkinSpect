@@ -11,10 +11,16 @@ const AIManagement = () => {
                 // Replace with your actual API endpoint
                 const response = await fetch('http://localhost:5000/api/admin/ai/models');
                 const data = await response.json();
-                setModels(data || []);
+                console.log("AI Models API Response:", data);
+                if (Array.isArray(data)) {
+                    setModels(data);
+                } else {
+                    console.error("Invalid AI models data format:", data);
+                    setModels([]);
+                }
             } catch (error) {
                 console.error('Error fetching AI models:', error);
-                // Handle error appropriately
+                setModels([]);
             }
         };
 

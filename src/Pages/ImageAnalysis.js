@@ -79,6 +79,26 @@ const handleSubmit = async (event) => {
       }
     );
 
+          // Record activity log here
+          try {
+            await axios.post("http://localhost:5000/api/activity-log", {
+              userId: userId,
+              activityType: "Image Analysis Submitted",
+              details: {
+                fullName: fullName,
+                gender: gender,
+                age: age,
+                // You might want to include information about the images uploaded
+                image1: file1 ? file1.name : null,
+                image2: file2 ? file2.name : null,
+              },
+            });
+            console.log("Activity log recorded for image analysis.");
+          } catch (activityLogError) {
+            console.error("Error recording activity log:", activityLogError);
+            // Optionally handle this error (e.g., show a less critical alert)
+          }
+
     if (response.data.message === 'Files uploaded successfully') { // Changed to check for message
       alert("Upload successful!");
       // Optionally reset the form here

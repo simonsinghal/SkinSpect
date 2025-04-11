@@ -7,7 +7,9 @@ const scanRoutes = require('./routes/scanRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const textRoutes = require('./routes/textRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
-
+const activityRoutes = require('./routes/activityRoute');
+const adminRoutes = require('./routes/adminRoutes');
+const diseaseRoutes = require('./routes/diseaseRoutes');
 const app = express();
 
 // Connect to MongoDB
@@ -24,6 +26,9 @@ app.use('/api/scans', scanRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api', textRoutes);
 app.use('/api/dashboard', dashboardRoutes); 
+app.use('/api', activityRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/admin/content', diseaseRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
