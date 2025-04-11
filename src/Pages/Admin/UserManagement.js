@@ -118,9 +118,9 @@ const UserManagement = () => {
                         </tbody>
                     </table>
                 </div>
-                {/* <div className="px-4 py-3 bg-gray-100 text-sm text-gray-500 flex justify-end items-center">
-                    <span>&lt; 1-10 &gt;</span>
-                </div> */}
+                // <div className="px-4 py-3 bg-gray-100 text-sm text-gray-500 flex justify-end items-center">
+                //     <span>&lt; 1-10 &gt;</span>
+                // </div>
             </div>
         </div>
     );
