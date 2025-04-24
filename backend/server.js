@@ -10,6 +10,9 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const activityRoutes = require('./routes/activityRoute');
 const adminRoutes = require('./routes/adminRoutes');
 const diseaseRoutes = require('./routes/diseaseRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes'); 
+const doctorsRoutes = require("./routes/doctorsRoutes");
+
 const app = express();
 
 // Connect to MongoDB
@@ -30,6 +33,9 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api', activityRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/content', diseaseRoutes);
+app.use('/api', feedbackRoutes);
+app.use('/api/doctors', doctorsRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

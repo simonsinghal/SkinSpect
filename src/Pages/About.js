@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef , useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import Logo from "../Images/Logo.png";
@@ -20,6 +20,11 @@ import cust3 from "../Images/cust3.png";
 const About = () => {
   const section3Ref = useRef(null);
   const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [submissionStatus, setSubmissionStatus] = useState(null); // 'success' or 'error'
+  const [submissionMessage, setSubmissionMessage] = useState('');
 
   const scrollToSection3 = () => {
     if (section3Ref.current) {
@@ -29,6 +34,41 @@ const About = () => {
 
   const handleRedirect = () => {
     navigate("/login"); // Redirect to the login page
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setSubmissionStatus(null);
+    setSubmissionMessage('');
+
+    try {
+      const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/api/contact-query', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, 
+          },
+          body: JSON.stringify({ name, email, message }),
+        });
+    
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmissionStatus('success');
+        setSubmissionMessage(data.message);
+        setName('');
+        setEmail('');
+        setMessage('');
+      } else {
+        setSubmissionStatus('error');
+        setSubmissionMessage(data.error || 'Failed to submit query.');
+      }
+    } catch (error) {
+      console.error('Error submitting query:', error);
+      setSubmissionStatus('error');
+      setSubmissionMessage('An unexpected error occurred.');
+    }
   };
 
   return (
@@ -293,39 +333,54 @@ const About = () => {
 
         {/* Section 6: Contact Query Section */}
         <section className="py-12 px-6 md:px-24 w-full bg-blue-100">
-          <div className="container mx-auto">
-            <div className="text-left">
-              <h2 className="text-4xl font-bold mb-4">Your Query</h2>
-
-
-              <form className="md:w-full">
-                {" "}
-                {/* Set form width to half of parent's width on medium screens */}
-                <input
-                  type="text"
-                  placeholder="Your Name"
-                  className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="email"
-                  placeholder="Your Email"
-                  className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <textarea
-                  placeholder="Your Message"
-                  className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                ></textarea>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 w-full" // w-full for button
-                >
-                  Submit
-                </button>
-              </form>
-              
+            <div className="container mx-auto">
+                <div className="text-left">
+                    <h2 className="text-4xl font-bold mb-4">Your Query and Feedback</h2>
+                    <form className="md:w-full" onSubmit={handleSubmit}>
+                        {submissionStatus === 'success' && (
+                            <div className="bg-green-200 text-green-700 border border-green-400 rounded-md py-2 px-3 mb-4">
+                                {submissionMessage}
+                            </div>
+                        )}
+                        {submissionStatus === 'error' && (
+                            <div className="bg-red-200 text-red-700 border border-red-400 rounded-md py-2 px-3 mb-4">
+                                {submissionMessage}
+                            </div>
+                        )}
+                        <input
+                            type="text"
+                            placeholder="Your Name"
+                            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="email"
+                            placeholder="Your Email"
+                            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                        <textarea
+                            placeholder="Your Message"
+                            className="w-full border border-gray-300 rounded-md py-2 px-3 mb-4 h-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            required
+                        ></textarea>
+                        <button
+                            type="submit"
+                            className="bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 w-full"
+                        >
+                            Submit
+                        </button>
+                    </form>
+                </div>
             </div>
-          </div>
         </section>
+
       </main>
 
       <Footer />

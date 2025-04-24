@@ -7,7 +7,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      const token = localStorage.getItem("token"); 
+      const token = localStorage.getItem("token");
 
       if (!token) {
         console.error("No token found, cannot fetch admin data.");
@@ -74,23 +74,23 @@ const Dashboard = () => {
             Recent Activity
           </h2>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto max-h-[400px]"> {/* Added max-h and overflow-y */}
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-blue-700 text-white sticky top-0 z-10">
               <tr>
-                <th className="px-4 py-2 text-left text-sm font-medium uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   S. No.
                 </th>
-                <th className="px-4 py-2 text-left text-sm font-medium uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   Activity
                 </th>
-                <th className="px-4 py-2 text-left text-sm font-medium uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   Input Details
                 </th>
-                <th className="px-4 py-2 text-left text-sm font-medium uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   User
                 </th>
-                <th className="px-4 py-2 text-left text-sm font-medium uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   Timestamp
                 </th>
               </tr>
@@ -98,38 +98,38 @@ const Dashboard = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {recentActivity.map((activity, index) => (
                 <tr key={activity.id || index}>
-                  <td className="px-4 py-2 text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {index + 1}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-800">
+                  <td className="px-6 py-4">
                     {activity.activityType}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-800">
+                  <td className="px-6 py-4">
                     {activity.activityType === "Image Analysis Submitted" &&
-                    activity.inputDetails ? (
-                      <div className="flex items-center">
-                        <img
-                          src={`http://localhost:5000/${activity.inputDetails}`} // Assuming your backend serves images from this path
-                          alt="Uploaded Scan"
-                          className="h-8 w-8 mr-2 rounded-md object-cover"
-                          onError={(e) => {
-                            e.target.onerror = null; 
-                            e.target.src = "/fallback-image.png";
-                          }}
-                        />
-                        <span>Uploaded Scan</span>
-                      </div>
-                    ) : activity.activityType === "Text Analysis Submitted" &&
                       activity.inputDetails ? (
-                      <span>{activity.inputDetails}</span>
-                    ) : (
-                      <span>{activity.inputDetails}</span>
-                    )}
+                        <div className="flex items-center">
+                          <img
+                            src={`http://localhost:5000/${activity.inputDetails}`}
+                            alt="Uploaded Scan"
+                            className="h-8 w-8 mr-2 rounded-md object-cover"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/fallback-image.png";
+                            }}
+                          />
+                          <span>Uploaded Scan</span>
+                        </div>
+                      ) : activity.activityType === "Text Analysis Submitted" &&
+                        activity.inputDetails ? (
+                          <span>{activity.inputDetails}</span>
+                        ) : (
+                          <span>{activity.inputDetails}</span>
+                        )}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-800">
+                  <td className="px-6 py-4">
                     {activity.user}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-800">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {new Date(activity.timestamp).toLocaleString()}
                   </td>
                 </tr>
@@ -137,9 +137,7 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
-        <div className="py-3 px-4 bg-gray-100 text-sm text-gray-500">
-          Showing 1-10
-        </div>
+        {/* No "Load More" button here */}
       </div>
     </div>
   );

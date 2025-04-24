@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -11,48 +11,17 @@ import { jwtDecode } from "jwt-decode";
 const TextAnalysis = () => {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [symptomOptions, setSymptomOptions] = useState([
-    "Pimples",
-    "Blackheads",
-    "Whiteheads",
-    "Pustules",
-    "Cysts",
-    "Rough Skin",
-    "Scaly Patches",
-    "Itching",
-    "Burning",
-    "Cracked Skin",
-    "Inflamed Skin",
-    "Oozing",
-    "Thickened Skin",
-    "Blisters",
-    "Redness",
-    "Swelling",
-    "Pain",
-    "Warmth",
-    "Dryness",
-    "Scaling",
-    "Hives",
-    "Ulcers",
-    "Joint Pain",
-    "Hair Loss",
-    "Asymmetry",
-    "Irregular Color",
-    "Diameter Changes",
-    "Evolving",
-    "Pitting",
-    "Joint Issues",
-    "Growth",
-    "Lump",
-    "Color Change",
-    "Circular Rash",
-    "Raised Skin",
-    "Clearing",
-    "Welts",
-    "Blanching",
-    "Red",
-    "Purple",
-    "Varied Growth",
+    "Pimples", "Blackheads", "Whiteheads", "Pustules", "Cysts",
+    "Rough Skin", "Scaly Patches", "Itching", "Burning", "Cracked Skin",
+    "Inflamed Skin", "Oozing", "Thickened Skin", "Blisters", "Redness",
+    "Swelling", "Pain", "Oozing.1", "Warmth", "Fever", "Dryness", "Scaling",
+    "Hives", "Ulcers", "Fatigue", "Joint Pain", "Hair Loss", "Asymmetry",
+    "Irregular Color", "Diameter Changes", "Evolving", "Rash", "Pitting",
+    "Joint Issues", "Growth", "Lump", "Color Change", "Circular Rash",
+    "Raised Skin", "Clearing", "Welts", "Blanching", "Red", "Purple",
+    "Varied Growth"
   ]);
+  const [prediction, setPrediction] = useState("Waiting for Submission..."); // Initial state
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
@@ -67,6 +36,23 @@ const TextAnalysis = () => {
       setSelectedSymptoms([...selectedSymptoms, symptom]);
     }
   };
+
+  const fetchPrediction = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/predict');
+      const data = await response.json();
+      setPrediction(data.prediction);
+      console.log('Prediction data:', data);
+    } catch (error) {
+      console.error('Error fetching prediction:', error);
+      setPrediction("Error fetching prediction");
+    }
+  };
+
+  // Removed the initial fetchPrediction in useEffect
+  // useEffect(() => {
+  //   fetchPrediction();
+  // }, []);
 
   const handleRemoveSymptom = (symptomToRemove) => {
     setSelectedSymptoms(
@@ -120,8 +106,8 @@ const TextAnalysis = () => {
       console.log("Response:", response.data);
 
       if (response.data.message === "Data saved successfully") {
-        alert("Submission successful!"); // Record activity log for text analysis
-
+        alert("Submission successful!");
+        // Record activity log for text analysis
         try {
           await axios.post("http://localhost:5000/api/activity-log", {
             userId: userId,
@@ -142,6 +128,9 @@ const TextAnalysis = () => {
         setGender("");
         setAge("");
         setSelectedSymptoms([]);
+
+        // Fetch the prediction again after successful submission
+        fetchPrediction();
       }
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -149,7 +138,6 @@ const TextAnalysis = () => {
     }
   };
 
-  
   return (
     <div className="font-montserrat">
       {/* Navbar */}
@@ -285,10 +273,10 @@ const TextAnalysis = () => {
           <p className="font-bold text-lg mb-2">
             Result:{" "}
             <span className="bg-blue-100 border border-blue-300 rounded-md px-2 py-1 text-blue-500">
-              Name of the disease
+              {prediction}
             </span>
           </p>
-          <a href="#" className="text-blue-500 underline block mt-2">
+          <a href="./findDoctor" className="text-blue-500 underline block mt-2">
             Nearby doctor recommendation??
           </a>
         </div>

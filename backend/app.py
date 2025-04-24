@@ -8,81 +8,82 @@ import pandas as pd
 app = Flask(__name__)
 CORS(app)
 
-# .\.venv\Scripts\activate
-# use this command to actiavte the venv environment
-
 # Load ensemble models and label encoder
-model_container = joblib.load("predicted_model.pkl")  # Dictionary of models
-scaler = joblib.load("scaler.pkl")  # Load the scaler used during training
-label_encoder = joblib.load("label_encoder.pkl")  # Label encoder
+try:
+    model_container = joblib.load("predicted_model.pkl")  # Dictionary of models
+    scaler = joblib.load("scaler.pkl")  # Load the scaler used during training
+    label_encoder = joblib.load("label_encoder.pkl")  # Label encoder
+    print("Models and encoders loaded successfully.")
+except FileNotFoundError as e:
+    print(f"Error loading model files: {e}. Make sure 'predicted_model.pkl', 'scaler.pkl', and 'label_encoder.pkl' are in the correct directory.")
+
+
 
 # Ordered list of all symptoms used during training (case-sensitive)
 all_symptoms = [
     "Pimples", "Blackheads", "Whiteheads", "Pustules", "Cysts",
     "Rough Skin", "Scaly Patches", "Itching", "Burning", "Cracked Skin",
     "Inflamed Skin", "Oozing", "Thickened Skin", "Blisters", "Redness",
-    "Swelling", "Pain", "Warmth", "Dryness", "Scaling", "Hives", "Ulcers",
-    "Joint Pain", "Hair Loss", "Asymmetry", "Irregular Color",
-    "Diameter Changes", "Evolving", "Pitting", "Joint Issues", "Growth",
-    "Lump", "Color Change", "Circular Rash", "Raised Skin", "Clearing",
-    "Welts", "Blanching", "Red", "Purple", "Varied Growth"
+    "Swelling", "Pain", "Oozing.1", "Warmth", "Fever", "Dryness", "Scaling",
+    "Hives", "Ulcers", "Fatigue", "Joint Pain", "Hair Loss", "Asymmetry",
+    "Irregular Color", "Diameter Changes", "Evolving", "Rash", "Pitting",
+    "Joint Issues", "Growth", "Lump", "Color Change", "Circular Rash",
+    "Raised Skin", "Clearing", "Welts", "Blanching", "Red", "Purple",
+    "Varied Growth"
 ]
 
 # MongoDB connection
-client = MongoClient("mongodb://localhost:27017/")
-db = client["skin-disease-detection"]
-collection = db["textanalyses"]
+try:
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client["skin-disease-detection"]
+    collection = db["textanalyses"]
+    # Test the connection
+    client.admin.command('ping')
+    print("Connected to MongoDB successfully!")
+except Exception as e:
+    print(f"Error connecting to MongoDB: {e}")
+    # Consider exiting if database connection is essential
+    # import sys
+    # sys.exit(1)
 
 @app.route("/predict", methods=["GET"])
 def predict():
     # Fetch latest symptoms from MongoDB
-    latest_doc = collection.find_one(sort=[("createdAt", -1)])
-    if not latest_doc or "symptoms" not in latest_doc:
-        return jsonify({"error": "No recent scan data found."}), 404
+    try:
+        latest_doc = collection.find_one(sort=[("createdAt", -1)])
+        if not latest_doc or "symptoms" not in latest_doc:
+            return jsonify({"error": "No recent scan data found in MongoDB."}), 404
 
-    symptoms = latest_doc["symptoms"]
+        symptoms = latest_doc["symptoms"]
 
-    # Create symptom dictionary: 1 if present, else 0
-    symptom_dict = {symptom: 1 if symptom in symptoms else 0 for symptom in all_symptoms}
-    symptom_input_df = pd.DataFrame([symptom_dict])
+        # Create symptom dictionary: 1 if present, else 0
+        symptom_dict = {symptom: 1 if symptom in symptoms else 0 for symptom in all_symptoms}
+        symptom_input_df = pd.DataFrame([symptom_dict])
 
-    # Scale the input
-    symptom_input_scaled = scaler.transform(symptom_input_df)
+        # Scale the input
+        try:
+            symptom_input_scaled = scaler.transform(symptom_input_df)
+        except Exception as e:
+            return jsonify({"error": f"Error during scaling: {e}"}), 500
 
-    # Ensemble prediction
-    predictions = [model.predict(symptom_input_scaled)[0] for model in model_container.values()]
-    majority_vote = max(set(predictions), key=predictions.count)
+        # Ensemble prediction
+        try:
+            predictions = [model.predict(symptom_input_scaled)[0] for model in model_container.values()]
+            majority_vote = max(set(predictions), key=predictions.count)
+        except Exception as e:
+            return jsonify({"error": f"Error during prediction: {e}"}), 500
 
-    # Decode label if needed
-    prediction = label_encoder.inverse_transform([majority_vote])[0]
+        # Decode label if needed
+        try:
+            prediction = label_encoder.inverse_transform([majority_vote])[0]
+            print(f"Predicted disease: {prediction}")
+            return jsonify({"prediction": prediction})
+        except Exception as e:
+            return jsonify({"error": f"Error decoding prediction: {e}"}), 500
 
-    return jsonify({
-        "prediction": prediction,
-        # "userId": str(latest_doc["_id"]),
-        # "symptoms": symptoms
-    })
-
-    # # Fetch latest symptoms from MongoDB
-    # latest_doc = collection.find().sort("createdAt", -1).limit(1)[0]
-
-    # symptoms = latest_doc["symptoms"]
-
-    # # Create symptom dictionary: 1 if present, else 0
-    # symptom_dict = {symptom: 1 if symptom in symptoms else 0 for symptom in all_symptoms}
-    # symptom_input_df = pd.DataFrame([symptom_dict])
-
-
-    # # Scale the input
-    # symptom_input_scaled = scaler.transform(symptom_input_df)
-
-    # # Ensemble prediction
-    # predictions = [model.predict(symptom_input_scaled)[0] for model in model_container.values()]
-    # majority_vote = max(set(predictions), key=predictions.count)
-
-    # # Decode label if needed
-    # final_prediction = label_encoder.inverse_transform([majority_vote])[0]
-
-    # return jsonify({"prediction": final_prediction})
+    except Exception as e:
+        return jsonify({"error": f"Error processing prediction request: {e}"}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    print("Starting Flask development server...")
+    app.run(debug=True) 
