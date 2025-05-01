@@ -49,11 +49,6 @@ const TextAnalysis = () => {
     }
   };
 
-  // Removed the initial fetchPrediction in useEffect
-  // useEffect(() => {
-  //   fetchPrediction();
-  // }, []);
-
   const handleRemoveSymptom = (symptomToRemove) => {
     setSelectedSymptoms(
       selectedSymptoms.filter((symptom) => symptom !== symptomToRemove)
