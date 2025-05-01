@@ -8,7 +8,7 @@ import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";
 const DoctorsResult = () => {
   const [doctorsData, setDoctorsData] = useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 28.6139, lng: 77.2090 }); // Default: Delhi
-  const apiKey = "YOUR_GOOGLE_MAPS_API_KEY"; // Replace with actual key
+  const apiKey = "AIzaSyDFegYSgswTpugFmkXgmlQM1VnUkPzNsyE"; // Replace with actual key
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,9 +97,9 @@ const DoctorsResult = () => {
               </tr>
             </thead>
             <tbody>
-              {doctorsData.map((doctor) => (
-                <tr key={doctor.id}>
-                  <td className="border border-blue-500 px-4 py-2">{doctor.id}</td>
+            {doctorsData.map((doctor, index) => (
+  <tr key={doctor.id}>
+    <td className="border border-blue-500 px-4 py-2">{index + 1}</td>
                   <td className="border border-blue-500 px-4 py-2">{doctor.name}</td>
                   <td className="border border-blue-500 px-4 py-2">{doctor.phone}</td>
                   <td className="border border-blue-500 px-4 py-2">{doctor.timings}</td>
