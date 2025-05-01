@@ -81,7 +81,7 @@ const About = () => {
   return (
     <div className="font-montserrat flex flex-col min-h-screen">
       {/* Navbar */}
-      <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md sticky top-0 z-1000 w-full">
+      <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md top-0 z-1000 w-full">
         <div className="logo flex items-center h-full">
           <img src={Logo} className="logo-image h-16 mr-3" alt="Logo" />
           <img src={Skinspect} className="logo-text h-9" alt="Skinspect" />
