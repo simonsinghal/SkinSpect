@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../authContext";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
@@ -7,60 +8,112 @@ import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";
 
 const DoctorsResult = () => {
   const [doctorsData, setDoctorsData] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 28.6139, lng: 77.2090 }); // Default: Delhi
-  const apiKey = "AIzaSyDFegYSgswTpugFmkXgmlQM1VnUkPzNsyE"; // Replace with actual key
+  const [mapCenter, setMapCenter] = useState({ lat: 28.6139, lng: 77.209 });
+  const apiKey = "AIzaSyDFegYSgswTpugFmkXgmlQM1VnUkPzNsyE";
+  const { currentUser, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const locationData = JSON.parse(localStorage.getItem("findDoctorLocation"));
-        const response = await fetch("http://localhost:5000/api/doctors/nearby", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(locationData),
-        });
-  
+        const locationData = JSON.parse(
+          localStorage.getItem("findDoctorLocation")
+        );
+        const response = await fetch(
+          "http://localhost:5000/api/doctors/nearby",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(locationData),
+          }
+        );
+
         const data = await response.json();
         console.log("Fetched doctor data:", data);
-  
+
         let doctorsArray = [];
-  
+
         if (Array.isArray(data)) {
           doctorsArray = data;
         } else if (Array.isArray(data.doctors)) {
           doctorsArray = data.doctors;
         }
-  
+
         setDoctorsData(doctorsArray);
-  
+
         if (doctorsArray.length > 0) {
           setMapCenter({ lat: doctorsArray[0].lat, lng: doctorsArray[0].lng });
         }
-  
       } catch (err) {
         console.error("Error fetching doctors:", err);
       }
     };
-  
+
     fetchData();
   }, []);
-  
+
+  const handleLogout = () => {
+    logout();
+    navigate("/"); // Redirect to the home page after logout
+  };
+
   return (
     <div>
       {/* Navbar */}
-      <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md sticky top-0 z-1000 w-full">
+      <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md top-0 z-1000 w-full">
         <div className="logo flex items-center h-100">
           <img src={Logo} className="logo-image h-16 mr-3" alt="Logo" />
           <img src={Skinspect} className="logo-text h-9" alt="Skinspect" />
         </div>
         <nav className="ml-auto h-full flex items-center">
           <ul className="nav-links flex items-center gap-8 font-poppins text-base font-medium h-full">
-            <li><Link to="/" className="text-blue-500 text-2xl">Home</Link></li>
-            <li><Link to="/features" className="text-blue-500 text-2xl">Features</Link></li>
-            <li><Link to="/about" className="text-blue-500 text-2xl">About</Link></li>
-            <li><Link to="/faq" className="text-blue-500 text-2xl">FAQ</Link></li>
-            <li><Link to="/login" className="text-blue-500 text-2xl">Login</Link></li>
-            <li><Link to="/register" className="text-blue-500 text-2xl">Register</Link></li>
+            <li>
+              <Link to="/" className="text-blue-500 text-2xl">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/features" className="text-blue-500 text-2xl">
+                Features
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" className="text-blue-500 text-2xl">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link to="/faq" className="text-blue-500 text-2xl">
+                FAQ
+              </Link>
+            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>
@@ -84,27 +137,53 @@ const DoctorsResult = () => {
           </div>
 
           {/* Doctor Table */}
-          <p className="text-gray-600 mb-4">{doctorsData.length} available doctors</p>
+          <p className="text-gray-600 mb-4">
+            {doctorsData.length} available doctors
+          </p>
           <table className="w-full text-left table-auto">
             <thead>
               <tr>
                 <th className="border border-blue-500 px-4 py-2">S.No</th>
-                <th className="border border-blue-500 px-4 py-2">Hospital/Clinic</th>
-                <th className="border border-blue-500 px-4 py-2">Phone number</th>
-                <th className="border border-blue-500 px-4 py-2">Timings</th>
+                <th className="border border-blue-500 px-4 py-2">
+                  Hospital/Clinic
+                </th>
+                <th
+                  className="border border-blue-500 px-4 py-2"
+                  style={{ width: "150px" }}
+                >
+                  Phone number
+                </th>
+                <th
+                  className="border border-blue-500 px-4 py-2"
+                  style={{ width: "320px" }}
+                >
+                  Timings
+                </th>
                 <th className="border border-blue-500 px-4 py-2">Ratings</th>
                 <th className="border border-blue-500 px-4 py-2">Location</th>
               </tr>
             </thead>
             <tbody>
-            {doctorsData.map((doctor, index) => (
-  <tr key={doctor.id}>
-    <td className="border border-blue-500 px-4 py-2">{index + 1}</td>
-                  <td className="border border-blue-500 px-4 py-2">{doctor.name}</td>
-                  <td className="border border-blue-500 px-4 py-2">{doctor.phone}</td>
-                  <td className="border border-blue-500 px-4 py-2">{doctor.timings}</td>
-                  <td className="border border-blue-500 px-4 py-2">{doctor.ratings}</td>
-                  <td className="border border-blue-500 px-4 py-2">{doctor.location}</td>
+              {doctorsData.map((doctor, index) => (
+                <tr key={doctor.id}>
+                  <td className="border border-blue-500 px-4 py-2">
+                    {index + 1}
+                  </td>
+                  <td className="border border-blue-500 px-4 py-2">
+                    {doctor.name}
+                  </td>
+                  <td className="border border-blue-500 px-4 py-2">
+                    {doctor.phone}
+                  </td>
+                  <td className="border border-blue-500 px-4 py-2">
+                    {doctor.timings}
+                  </td>
+                  <td className="border border-blue-500 px-4 py-2">
+                    {doctor.ratings}
+                  </td>
+                  <td className="border border-blue-500 px-4 py-2">
+                    {doctor.location}
+                  </td>
                 </tr>
               ))}
             </tbody>

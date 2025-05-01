@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useNavigate} from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
@@ -7,9 +7,16 @@ import Icon from "../Images/Icon.png";
 import cross from "../Images/cross.png";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { AuthContext } from "../authContext";
 
 const TextAnalysis = () => {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const { currentUser, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/"); // Redirect to the home page after logout
+  };
   const [symptomOptions, setSymptomOptions] = useState([
     "Pimples", "Blackheads", "Whiteheads", "Pustules", "Cysts",
     "Rough Skin", "Scaly Patches", "Itching", "Burning", "Cracked Skin",
@@ -163,16 +170,36 @@ const TextAnalysis = () => {
                 FAQ
               </Link>
             </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">
-                Register
-              </Link>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="text-blue-500 text-2xl"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>

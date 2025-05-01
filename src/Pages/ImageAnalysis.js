@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link , useNavigate} from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import UploadIcon from "../Images/uploadIcon.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from "../authContext";
 
 const ImageAnalysisPage = () => {
   const [image1, setImage1] = useState(null);
@@ -16,6 +17,12 @@ const ImageAnalysisPage = () => {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [prediction, setPrediction] = useState("Waiting for Submission...");
+  const { currentUser, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/"); // Redirect to the home page after logout
+  };
 
 // Handle image upload
 const handleImageUpload = (event, setImage, setFile) => {
@@ -149,16 +156,36 @@ return (
               FAQ
             </Link>
           </li>
-          <li>
-            <Link to="/login" className="text-blue-500 text-2xl">
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link to="/register" className="text-blue-500 text-2xl">
-              Register
-            </Link>
-          </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="text-blue-500 text-2xl"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
         </ul>
       </nav>
     </header>

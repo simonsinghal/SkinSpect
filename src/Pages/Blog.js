@@ -1,13 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../authContext";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
-import InfluencerCarousel from "./InfluencerCarousel"; 
-import ArticleGrid from "./ArticleGrid"; 
+import InfluencerCarousel from "./InfluencerCarousel";
+import ArticleGrid from "./ArticleGrid";
 import blogbg from "../Images/blogbg.png";
 import Footer from "./Footer";
 
 const Blog = () => {
+  const { currentUser, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/"); // Redirect to the home page after logout
+  };
+
   return (
     <div>
       {/* Navbar */}
@@ -38,16 +46,36 @@ const Blog = () => {
                 FAQ
               </Link>
             </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">
-                Register
-              </Link>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="text-blue-500 text-2xl"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>
@@ -75,7 +103,7 @@ const Blog = () => {
         </div>
       </section>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState , useContext} from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from '../authContext';
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import BackgroundImage from "../Images/BackgroundImage.png";
@@ -11,6 +12,13 @@ const FindDoctor = () => {
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [country, setCountry] = useState("");
+    const { currentUser, logout } = useContext(AuthContext);
+
+    const handleLogout = () => {
+        logout();
+        navigate('/'); // Redirect to the home page after logout
+      };
+      
 
     const handleSubmit = () => {
         const locationData = {
@@ -26,10 +34,11 @@ const FindDoctor = () => {
         navigate("/doctorsresult");
     };
 
+
     return (
         <div className="font-montserrat">
             {/* Navbar */}
-            <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md sticky top-0 z-1000 w-full">
+            <header className="navbar flex h-24 items-center px-20 bg-gray-100 shadow-md top-0 z-1000 w-full">
                 <div className="logo flex items-center h-100">
                     <img src={Logo} className="logo-image h-16 mr-3" alt="Logo" />
                     <img src={Skinspect} className="logo-text h-9" alt="Skinspect" />
@@ -56,16 +65,33 @@ const FindDoctor = () => {
                                 FAQ
                             </Link>
                         </li>
-                        <li>
-                            <Link to="/login" className="text-blue-500 text-2xl">
-                                Login
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/register" className="text-blue-500 text-2xl">
-                                Register
-                            </Link>
-                        </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
                     </ul>
                 </nav>
             </header>
