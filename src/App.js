@@ -14,6 +14,7 @@ import FindDoctor from './Pages/FindDoctor';
 import DoctorsResult from './Pages/DoctorsResult';
 import Dashboard from './Pages/Dashboard';
 import Admin from './Pages/Admin';
+import { AuthProvider } from './authContext';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -27,6 +28,7 @@ function App() {
 
 
   return (
+    <AuthProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -44,6 +46,7 @@ function App() {
         <Route path = "/admin/*" element={<Admin/>} />
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }
 

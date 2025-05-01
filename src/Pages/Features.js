@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom"; 
+import React , {useContext} from "react";
+import { Link , useNavigate} from "react-router-dom"; 
+import { AuthContext } from '../authContext';
 import Icon from "../Images/Icon.png";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -15,7 +16,16 @@ import img4 from "../Images/img4.png";
 import img5 from "../Images/img5.png";
 import img6 from "../Images/img6.png";
 
+
 const FeaturesPage = () => {
+  const navigate = useNavigate();
+  const { currentUser, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Redirect to the home page after logout
+  };
+
   return (
     <div>
       {/* Navbar */}
@@ -49,16 +59,33 @@ const FeaturesPage = () => {
                 FAQ
               </Link>
             </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">
-                Register
-              </Link>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>

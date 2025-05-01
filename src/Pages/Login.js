@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState , useContext} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
 import Icon from "../Images/Icon.png";
 import Facebook from "../Images/Facebook.png";
 import Google from "../Images/Google.png";
+import { AuthContext } from '../authContext';
 
 const Login = ({ setCurrentUser }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,10 +33,12 @@ const Login = ({ setCurrentUser }) => {
                 throw new Error(data.error || "Login failed");
             }
 
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
+            login(data.user, data.token); 
 
-            setCurrentUser(data.user); // Update state with logged-in user
+            // localStorage.setItem("token", data.token);
+            // localStorage.setItem("user", JSON.stringify(data.user));
+
+            // setCurrentUser(data.user); // Update state with logged-in user
 
             // Check user role and redirect accordingly
             if (data.user && (data.user.role === 'admin' || data.user.isAdmin === true)) {

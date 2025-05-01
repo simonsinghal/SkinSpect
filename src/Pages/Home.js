@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React , {useContext} from "react";
+import { Link , useNavigate} from "react-router-dom";
+import { AuthContext } from '../authContext';
 import Icon from "../Images/Icon.png";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -22,47 +23,178 @@ const Home = () => {
   const diseases = [
     {
       id: 1,
-      name: "Basal Cell Carcinoma (BCC)",
-      content:
-        "Basal cell carcinoma (BCC) is a common type of skin cancer that develops in the basal cells of the skin.",
+      name: "Acne",
+      description: "A common skin condition characterized by pimples on the face, forehead, chest, upper back and shoulders.",
     },
     {
       id: 2,
-      name: "Melanoma",
-      content:
-        "Melanoma is a dangerous type of skin cancer that develops in the cells that produce melanin.",
+      name: "Actinic Keratosis",
+      description: "Rough, scaly patches on the skin caused by years of sun exposure. They can sometimes develop into skin cancer.",
     },
     {
       id: 3,
-      name: "Squamous Cell Carcinoma (SCC)",
-      content:
-        "Squamous cell carcinoma (SCC) is a cancer that starts in squamous cells, which line the skin, respiratory, and digestive tracts.",
+      name: "Atopic Dermatitis",
+      description: "A chronic inflammatory skin condition also known as eczema, often causing itchy, red, swollen, and cracked skin.",
     },
     {
       id: 4,
-      name: "Atopic Dermatitis",
-      content:
-        "Atopic dermatitis, also known as eczema, is a chronic skin condition that causes inflamed, itchy, red, dry, and cracked skin.",
+      name: "Bullous Diseases",
+      description: "A group of skin disorders characterized by the formation of blisters (bullae).",
     },
     {
       id: 5,
-      name: "Eczema",
-      content:
-        "Eczema (atopic dermatitis) is a chronic skin condition that causes inflammation, redness, itching, and dry skin.",
+      name: "Cellulitis",
+      description: "A common and potentially serious bacterial skin infection causing redness, swelling, pain, and warmth in the affected area.",
     },
     {
       id: 6,
-      name: "Seborrheic Keratoses and Other Benign Tumors",
-      content:
-        "A seborrheic keratosis is a very common, noncancerous (benign) skin growth that appears as a raised, often waxy, brown or black spot on the skin, typically found on the face, chest, and back",
+      name: "Eczema",
+      description: "A general term for several types of skin inflammation that cause itchy, dry, and irritated skin.",
     },
     {
       id: 7,
-      name: "Tinea (Ringworm), Candidiasis, and Other Fungal Infections",
-      content:
-        "Tinea, also known as ringworm, is a fungal infection that can affect the skin, nails, and hair. ",
+      name: "Drug Eruptions",
+      description: "Skin reactions caused by medications, ranging from mild rashes to severe blistering.",
+    },
+    {
+      id: 8,
+      name: "Herpes HPV Warts Other Viral Infections",
+      description: "A category including infections caused by the herpes simplex virus (HSV) and human papillomavirus (HPV), leading to various skin conditions and STDs.",
+    },
+    {
+      id: 9,
+      name: "Light Diseases",
+      description: "Skin conditions that are triggered or aggravated by exposure to sunlight or artificial light.",
+    },
+    {
+      id: 10,
+      name: "Lupus",
+      description: "A chronic autoimmune disease that can affect many parts of the body, including the skin, causing rashes and other skin problems.",
+    },
+    {
+      id: 11,
+      name: "Melanoma",
+      description: "A serious type of skin cancer that begins in melanocytes (cells that produce pigment).",
+    },
+    {
+      id: 12,
+      name: "Poison Ivy Oak and Sumac",
+      description: "An allergic skin reaction caused by contact with the oily resin (urushiol) of poison ivy, poison oak, or poison sumac plants.",
+    },
+    {
+      id: 13,
+      name: "Psoriasis",
+      description: "A chronic autoimmune disease that causes raised, red, scaly patches on the skin.",
+    },
+    {
+      id: 14,
+      name: "Benign Tumors",
+      description: "Non-cancerous growths on the skin.",
+    },
+    {
+      id: 15,
+      name: "Systemic Diseases",
+      description: "Skin manifestations of diseases affecting internal organs or the entire body.",
+    },
+    {
+      id: 16,
+      name: "Ringworm",
+      description: "A fungal infection of the skin that causes a circular, red, itchy rash.",
+    },
+    {
+      id: 17,
+      name: "Urticarial Hives",
+      description: "Raised, itchy welts on the skin that can appear suddenly and vary in size.",
+    },
+    {
+      id: 18,
+      name: "Vascular Tumors",
+      description: "Tumors that originate from blood vessels or lymph vessels in the skin.",
+    },
+    {
+      id: 19,
+      name: "Vasculitis",
+      description: "Inflammation of blood vessels, which can cause skin rashes, bumps, and other symptoms.",
+    },
+    {
+      id: 20,
+      name: "Viral Infections",
+      description: "Skin conditions caused by various viruses, such as warts, chickenpox, and shingles.",
+    },
+    {
+      id: 21,
+      name: "Basal Cell Carcinoma",
+      description: "A common type of skin cancer that usually develops slowly and rarely spreads to other parts of the body.",
+    },
+    {
+      id: 22,
+      name: "Squamous Cell Carcinoma",
+      description: "A type of skin cancer that can grow more quickly and spread to other parts of the body if not treated.",
+    },
+    {
+      id: 23,
+      name: "Dermatofibroma",
+      description: "A common, benign skin nodule that is usually firm and slightly raised.",
+    },
+    {
+      id: 24,
+      name: "Nevus",
+      description: "A mole, a common benign growth of melanocytes.",
+    },
+    {
+      id: 25,
+      name: "Pigmented Lesions",
+      description: "A benign, often dark-colored skin growth.",
+    },
+    {
+      id: 26,
+      name: "Seborrheic Keratosis",
+      description: "A common non-cancerous skin growth that often appears as a waxy, raised, slightly rough patch.",
+    },
+    {
+      id: 27,
+      name: "Vascular Lesions",
+      description: "A general term for skin abnormalities involving blood vessels.",
+    },
+    {
+      id: 28,
+      name: "Acne Rosacea",
+      description: "A chronic inflammatory skin condition that causes redness, flushing, visible blood vessels, and sometimes small, red bumps on the face.",
+    },
+    {
+      id: 29,
+      name: "Cellulitis Impetigo and Other Bacterial Infections",
+      description: "A category including bacterial skin infections like cellulitis and impetigo.",
+    },
+    {
+      id: 30,
+      name: "Exanthems Drug Eruptions",
+      description: "Skin rashes (exanthems) often caused by viral infections or drug reactions.",
+    },
+    {
+      id: 31,
+      name: "Lichen Planus",
+      description: "An inflammatory condition that can affect the skin, mouth, nails, and hair, causing itchy, flat-topped bumps.",
+    },
+    {
+      id: 32,
+      name: "Tinea Ringworm Candidiasis Other Fungal Infections",
+      description: "A category including fungal skin infections like ringworm and candidiasis.",
+    },
+    {
+      id: 33,
+      name: "Warts Molluscum and Other Viral Infections",
+      description: "A category including viral skin infections like warts and molluscum contagiosum.",
     },
   ];
+    const navigate = useNavigate();
+    const { currentUser, logout } = useContext(AuthContext);
+  
+    const handleLogout = () => {
+      logout();
+      navigate('/'); // Redirect to the home page after logout
+    };
+
 
   const renderArrowPrev = (onClickHandler, hasPrev, label) =>
     hasPrev && (
@@ -169,16 +301,25 @@ const Home = () => {
                 FAQ
               </Link>
             </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">
-                Register
-              </Link>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li><Link to="/login" className="text-blue-500 text-2xl">Login</Link></li>
+                <li><Link to="/register" className="text-blue-500 text-2xl">Register</Link></li>
+              </>
+            )}
           </ul>
         </nav>
       </header>

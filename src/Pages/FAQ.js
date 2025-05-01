@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { Link , useNavigate} from "react-router-dom";
+import { AuthContext } from '../authContext';
 import { Accordion, AccordionItem } from "@radix-ui/react-accordion";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -50,6 +51,13 @@ export default function FAQ() {
   ];
 
   const [openItems, setOpenItems] = useState([]);
+  const navigate = useNavigate();
+  const { currentUser, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Redirect to the home page after logout
+  };
 
   const handleItemClick = (item) => {
     setOpenItems((prevOpenItems) => {
@@ -97,16 +105,33 @@ export default function FAQ() {
                 FAQ
               </Link>
             </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">
-                Register
-              </Link>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>

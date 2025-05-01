@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
+import { AuthContext } from '../authContext';
 import Icon from "../Images/Icon.png";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -14,6 +15,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
+  const { currentUser, logout } = useContext(AuthContext);
   const [profileData, setProfileData] = useState({
     fullName: "",
     email: "",
@@ -65,6 +67,11 @@ const Dashboard = () => {
       console.error("Profile update failed:", err);
       alert("Failed to update profile.");
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Redirect to the home page after logout
   };
 
   useEffect(() => {
@@ -136,16 +143,33 @@ const Dashboard = () => {
                 FAQ
               </Link>
             </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">
-                Register
-              </Link>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>

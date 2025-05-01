@@ -1,4 +1,4 @@
-import React, { useRef , useState} from "react";
+import React, { useRef , useState, useContext} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import Logo from "../Images/Logo.png";
@@ -16,6 +16,7 @@ import consult from "../Images/consult.png";
 import cust1 from "../Images/cust1.png";
 import cust2 from "../Images/cust2.png";
 import cust3 from "../Images/cust3.png";
+import { AuthContext } from '../authContext';
 
 const About = () => {
   const section3Ref = useRef(null);
@@ -25,6 +26,7 @@ const About = () => {
   const [message, setMessage] = useState('');
   const [submissionStatus, setSubmissionStatus] = useState(null); // 'success' or 'error'
   const [submissionMessage, setSubmissionMessage] = useState('');
+  const { currentUser, logout } = useContext(AuthContext);
 
   const scrollToSection3 = () => {
     if (section3Ref.current) {
@@ -34,6 +36,11 @@ const About = () => {
 
   const handleRedirect = () => {
     navigate("/login"); // Redirect to the login page
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Redirect to the home page after logout
   };
 
   const handleSubmit = async (event) => {
@@ -106,16 +113,33 @@ const About = () => {
                 FAQ
               </Link>
             </li>
-            <li>
-              <Link to="/login" className="text-blue-500 text-2xl">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="text-blue-500 text-2xl">
-                Register
-              </Link>
-            </li>
+            {currentUser ? (
+              <>
+                <li>
+                  <Link to="/dashboard" className="text-blue-500 text-2xl">
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>
