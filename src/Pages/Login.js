@@ -123,9 +123,9 @@ const Login = ({ setCurrentUser }) => {
                                 <Link to="/auth/google">
                                     <img src={Google} className="google w-12 h-12" alt="Google Icon" />
                                 </Link>
-                                <Link to="/auth/facebook">
+                                {/* <Link to="/auth/facebook">
                                     <img src={Facebook} className="facebook w-12 h-12" alt="Facebook Icon" />
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </form>

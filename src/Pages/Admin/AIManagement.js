@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext} from "react";
+import {Link, useNavigate} from 'react-router-dom';
+import { AuthContext } from "../../authContext";
 
 const AIManagement = () => {
   const [currentVersion, setCurrentVersion] = useState("V1.7"); // Static for now
   const [models, setModels] = useState([]);
-
+    const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+        const { currentUser, logout } = useContext(AuthContext);
+      
+        const handleLogout = () => {
+          logout();
+          navigate("/"); // Redirect to the home page after logout
+        };
   useEffect(() => {
     // Fetch AI model data from your backend API
     const fetchAIModels = async () => {
@@ -37,6 +46,12 @@ const AIManagement = () => {
 
   return (
     <div className="flex-1 p-8">
+                                          <button
+        onClick={handleLogout}
+        className="absolute top-4 right-20 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-200 ease-in-out z-20" // Added z-20 to ensure it's on top
+      >
+        Logout
+      </button>
       {/* Current Version and Update Model Button */}
       <div className="flex justify-between items-center mb-6">
         <div className="bg-white shadow-md rounded-lg p-4 w-64 text-center">

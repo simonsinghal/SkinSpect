@@ -1,12 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../authContext";
 const FeedbackSupport = () => {
   const [feedbackQueries, setFeedbackQueries] = useState([]);
   const [pendingQueriesCount, setPendingQueriesCount] = useState(0);
   const [resolvedQueriesCount, setResolvedQueriesCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+    const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+        const { currentUser, logout } = useContext(AuthContext);
+      
+        const handleLogout = () => {
+          logout();
+          navigate("/"); // Redirect to the home page after logout
+        };
 
   const fetchFeedbackData = async () => { // Defined at the component's top level
     setLoading(true);
@@ -115,6 +124,12 @@ const FeedbackSupport = () => {
 
   return (
     <div className="p-8 flex-1">
+                                    <button
+        onClick={handleLogout}
+        className="absolute top-4 right-20 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-200 ease-in-out z-20" // Added z-20 to ensure it's on top
+      >
+        Logout
+      </button>
       {/* Top Statistics */}
       <div className="flex space-x-4 mb-6">
         <div className="bg-white shadow-md rounded-lg p-4 w-64 text-center">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link} from "react-router-dom";
-import { AuthContext } from '../authContext';
+import { Link } from "react-router-dom";
+import { AuthContext } from "../authContext";
 import Icon from "../Images/Icon.png";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [userId, setUserId] = useState(null);
   const { currentUser, logout } = useContext(AuthContext);
   const [profileData, setProfileData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     phone: "",
     password: "",
@@ -50,10 +50,15 @@ const Dashboard = () => {
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem("token"); 
+      const token = localStorage.getItem("token");
+      console.log("Token:", token);
+      if (!token) {
+        alert("No token found. Please log in again.");
+        return;
+      }
 
       const response = await axios.put(
-        "http://localhost:5000/api/auth/update-profile", 
+        "http://localhost:5000/api/auth/update-profile",
         profileData,
         {
           headers: {
@@ -71,7 +76,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/'); // Redirect to the home page after logout
+    navigate("/"); // Redirect to the home page after logout
   };
 
   useEffect(() => {
@@ -151,7 +156,10 @@ const Dashboard = () => {
                   </Link>
                 </li>
                 <li>
-                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                  <button
+                    onClick={handleLogout}
+                    className="text-blue-500 text-2xl"
+                  >
                     Logout
                   </button>
                 </li>

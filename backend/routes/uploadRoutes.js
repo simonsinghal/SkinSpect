@@ -52,9 +52,9 @@ router.post('/', upload.fields([
   console.log('[/api/upload] Request files:', req.files);
 
   try {
-    const { fullName, gender, age } = req.body;
+    const { name, gender, age, userId } = req.body;
 
-    if (!fullName || !gender || !age) {
+    if (!name || !gender || !age) {
       console.warn('[/api/upload] Missing fields');
       return res.status(400).json({ error: 'Bad Request', message: 'Missing required fields: fullName, gender, age' });
     }
@@ -104,6 +104,7 @@ router.post('/', upload.fields([
         userId: req.user._id, // ✅ Ensure authentication middleware adds req.user
         activityType: 'Image Analysis Submitted',
         imageFilename: firstUploadedFilename,
+        inputDetails: `uploads/${firstUploadedFilename}`
       });
       console.log("[/api/upload] Activity logged successfully.");
     } catch (activityErr) {

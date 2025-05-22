@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { register, login, updateProfile } = require('../controllers/authController.js');
-const protect = require('../middleware/requireAdminAuth.js');
+const protect = require('../middleware/requireAuth.js');
 
 console.log("register:", register);
 console.log("login:", login);

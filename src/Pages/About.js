@@ -27,7 +27,7 @@ const About = () => {
   const [submissionStatus, setSubmissionStatus] = useState(null); // 'success' or 'error'
   const [submissionMessage, setSubmissionMessage] = useState('');
   const { currentUser, logout } = useContext(AuthContext);
-
+  
   const scrollToSection3 = () => {
     if (section3Ref.current) {
       section3Ref.current.scrollIntoView({ behavior: "smooth" });
@@ -289,7 +289,9 @@ const About = () => {
                 that addresses both accessibility and accuracy concerns.
               </p>
               <div className="text-left">
-                <button className="bg-blue-500 text-white py-3 mt-8 px-6 rounded-lg font-medium hover:bg-blue-600">
+                <button className="bg-blue-500 text-white py-3 mt-8 px-6 rounded-lg font-medium hover:bg-blue-600"
+                onClick={() => navigate('/features')}
+                >
                   View All
                 </button>
               </div>

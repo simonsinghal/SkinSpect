@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../authContext";
 
 const ContentManagement = () => {
   const location = useLocation();
@@ -14,6 +15,13 @@ const ContentManagement = () => {
   const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
+        const { currentUser, logout } = useContext(AuthContext);
+      
+        const handleLogout = () => {
+          logout();
+          navigate("/"); // Redirect to the home page after logout
+        };
+  
 
   useEffect(() => {
     const fetchDiseases = async () => {
@@ -200,6 +208,12 @@ const ContentManagement = () => {
 
   return (
     <div className="flex-1 p-8">
+                        <button
+        onClick={handleLogout}
+        className="absolute top-4 right-20 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-200 ease-in-out z-20" // Added z-20 to ensure it's on top
+      >
+        Logout
+      </button>
       {/* Top Statistics and Add New Button */}
       <div className="flex justify-between items-center mb-6">
         <div className="bg-white shadow-md rounded-lg p-4 w-64 text-center">
@@ -226,7 +240,7 @@ const ContentManagement = () => {
         >
           Disease
         </button>
-        <button
+        {/* <button
           className={`px-4 py-2 text-xl text-white font-semibold focus:outline-none ${
             activeTab === "faq" ? "border-b-2 border-white" : ""
           }`}
@@ -241,7 +255,7 @@ const ContentManagement = () => {
           onClick={() => handleTabChange("content")}
         >
           Content
-        </button>
+        </button> */}
       </div>
 
       {/* Content Below Tabs */}

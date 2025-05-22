@@ -15,7 +15,7 @@ const TextAnalysis = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
-    navigate("/"); // Redirect to the home page after logout
+    navigate("/");
   };
   const [symptomOptions, setSymptomOptions] = useState([
     "Pimples", "Blackheads", "Whiteheads", "Pustules", "Cysts",

@@ -1,6 +1,6 @@
-import React , {useContext} from "react";
-import { Link , useNavigate} from "react-router-dom";
-import { AuthContext } from '../authContext';
+import React, {useRef, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../authContext";
 import Icon from "../Images/Icon.png";
 import Logo from "../Images/Logo.png";
 import Skinspect from "../Images/Skinspect.png";
@@ -17,184 +17,120 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
+import acneImage from "../Images/acneImage.jpg";
+import actinicImage from "../Images/actinicImage.jpg";
+import atopicImage from "../Images/atopicImage.jpg";
+import bullousImage from "../Images/bullousImage.jpg";
+import cellulitisImage from "../Images/cellulitisImage.jpg";
+import eczemaImage from "../Images/eczemaImage.jpg";
+import drug from "../Images/drugEruptions.jpg";
+import HPV from "../Images/HPV.jpg";
+import lupus from "../Images/lupus.jpg";
+import lightDiseases from "../Images/lightDiseases.jpg";
 
 const Home = () => {
+  const section3Ref = useRef(null);
   const diseases = [
     {
       id: 1,
       name: "Acne",
-      description: "A common skin condition characterized by pimples on the face, forehead, chest, upper back and shoulders.",
+      description:
+        "A common skin condition characterized by pimples on the face, forehead, chest, upper back and shoulders.",
+      image: acneImage,
     },
     {
       id: 2,
       name: "Actinic Keratosis",
-      description: "Rough, scaly patches on the skin caused by years of sun exposure. They can sometimes develop into skin cancer.",
+      description:
+        "Rough, scaly patches on the skin caused by years of sun exposure. They can sometimes develop into skin cancer.",
+      image: actinicImage,
     },
     {
       id: 3,
       name: "Atopic Dermatitis",
-      description: "A chronic inflammatory skin condition also known as eczema, often causing itchy, red, swollen, and cracked skin.",
+      description:
+        "A chronic inflammatory skin condition also known as eczema, often causing itchy, red, swollen, and cracked skin.",
+      image: atopicImage,
     },
     {
       id: 4,
       name: "Bullous Diseases",
-      description: "A group of skin disorders characterized by the formation of blisters (bullae).",
+      description:
+        "A group of skin disorders characterized by the formation of blisters (bullae).",
+      image: bullousImage,
     },
     {
       id: 5,
       name: "Cellulitis",
-      description: "A common and potentially serious bacterial skin infection causing redness, swelling, pain, and warmth in the affected area.",
+      description:
+        "A common and potentially serious bacterial skin infection causing redness, swelling, pain, and warmth in the affected area.",
+      image: cellulitisImage,
     },
     {
       id: 6,
       name: "Eczema",
-      description: "A general term for several types of skin inflammation that cause itchy, dry, and irritated skin.",
+      description:
+        "A general term for several types of skin inflammation that cause itchy, dry, and irritated skin.",
+      image: eczemaImage,
     },
     {
       id: 7,
       name: "Drug Eruptions",
-      description: "Skin reactions caused by medications, ranging from mild rashes to severe blistering.",
+      description:
+        "Skin reactions caused by medications, ranging from mild rashes to severe blistering.",
+      image: drug,
     },
     {
       id: 8,
       name: "Herpes HPV Warts Other Viral Infections",
-      description: "A category including infections caused by the herpes simplex virus (HSV) and human papillomavirus (HPV), leading to various skin conditions and STDs.",
+      description:
+        "A category including infections caused by the herpes simplex virus (HSV) and human papillomavirus (HPV), leading to various skin conditions and STDs.",
+      image: HPV,
     },
     {
       id: 9,
       name: "Light Diseases",
-      description: "Skin conditions that are triggered or aggravated by exposure to sunlight or artificial light.",
+      description:
+        "Skin conditions that are triggered or aggravated by exposure to sunlight or artificial light.",
+      image: lightDiseases,
     },
     {
       id: 10,
       name: "Lupus",
-      description: "A chronic autoimmune disease that can affect many parts of the body, including the skin, causing rashes and other skin problems.",
-    },
-    {
-      id: 11,
-      name: "Melanoma",
-      description: "A serious type of skin cancer that begins in melanocytes (cells that produce pigment).",
-    },
-    {
-      id: 12,
-      name: "Poison Ivy Oak and Sumac",
-      description: "An allergic skin reaction caused by contact with the oily resin (urushiol) of poison ivy, poison oak, or poison sumac plants.",
-    },
-    {
-      id: 13,
-      name: "Psoriasis",
-      description: "A chronic autoimmune disease that causes raised, red, scaly patches on the skin.",
-    },
-    {
-      id: 14,
-      name: "Benign Tumors",
-      description: "Non-cancerous growths on the skin.",
-    },
-    {
-      id: 15,
-      name: "Systemic Diseases",
-      description: "Skin manifestations of diseases affecting internal organs or the entire body.",
-    },
-    {
-      id: 16,
-      name: "Ringworm",
-      description: "A fungal infection of the skin that causes a circular, red, itchy rash.",
-    },
-    {
-      id: 17,
-      name: "Urticarial Hives",
-      description: "Raised, itchy welts on the skin that can appear suddenly and vary in size.",
-    },
-    {
-      id: 18,
-      name: "Vascular Tumors",
-      description: "Tumors that originate from blood vessels or lymph vessels in the skin.",
-    },
-    {
-      id: 19,
-      name: "Vasculitis",
-      description: "Inflammation of blood vessels, which can cause skin rashes, bumps, and other symptoms.",
-    },
-    {
-      id: 20,
-      name: "Viral Infections",
-      description: "Skin conditions caused by various viruses, such as warts, chickenpox, and shingles.",
-    },
-    {
-      id: 21,
-      name: "Basal Cell Carcinoma",
-      description: "A common type of skin cancer that usually develops slowly and rarely spreads to other parts of the body.",
-    },
-    {
-      id: 22,
-      name: "Squamous Cell Carcinoma",
-      description: "A type of skin cancer that can grow more quickly and spread to other parts of the body if not treated.",
-    },
-    {
-      id: 23,
-      name: "Dermatofibroma",
-      description: "A common, benign skin nodule that is usually firm and slightly raised.",
-    },
-    {
-      id: 24,
-      name: "Nevus",
-      description: "A mole, a common benign growth of melanocytes.",
-    },
-    {
-      id: 25,
-      name: "Pigmented Lesions",
-      description: "A benign, often dark-colored skin growth.",
-    },
-    {
-      id: 26,
-      name: "Seborrheic Keratosis",
-      description: "A common non-cancerous skin growth that often appears as a waxy, raised, slightly rough patch.",
-    },
-    {
-      id: 27,
-      name: "Vascular Lesions",
-      description: "A general term for skin abnormalities involving blood vessels.",
-    },
-    {
-      id: 28,
-      name: "Acne Rosacea",
-      description: "A chronic inflammatory skin condition that causes redness, flushing, visible blood vessels, and sometimes small, red bumps on the face.",
-    },
-    {
-      id: 29,
-      name: "Cellulitis Impetigo and Other Bacterial Infections",
-      description: "A category including bacterial skin infections like cellulitis and impetigo.",
-    },
-    {
-      id: 30,
-      name: "Exanthems Drug Eruptions",
-      description: "Skin rashes (exanthems) often caused by viral infections or drug reactions.",
-    },
-    {
-      id: 31,
-      name: "Lichen Planus",
-      description: "An inflammatory condition that can affect the skin, mouth, nails, and hair, causing itchy, flat-topped bumps.",
-    },
-    {
-      id: 32,
-      name: "Tinea Ringworm Candidiasis Other Fungal Infections",
-      description: "A category including fungal skin infections like ringworm and candidiasis.",
-    },
-    {
-      id: 33,
-      name: "Warts Molluscum and Other Viral Infections",
-      description: "A category including viral skin infections like warts and molluscum contagiosum.",
+      description:
+        "A chronic autoimmune disease that can affect many parts of the body, including the skin, causing rashes and other skin problems.",
+      image: lupus,
     },
   ];
-    const navigate = useNavigate();
-    const { currentUser, logout } = useContext(AuthContext);
-  
-    const handleLogout = () => {
-      logout();
-      navigate('/'); // Redirect to the home page after logout
-    };
+  const navigate = useNavigate();
+  const { currentUser, logout } = useContext(AuthContext);
 
+const handleLogout = async () => {
+  try {
+    // Call backend logout route (which destroys Google session)
+    await fetch("http://localhost:5000/api/auth/logout", {
+      method: "GET",
+      credentials: "include", // important for cookies to work
+    });
+
+    // Clear localStorage (in case of token-based login)
+    localStorage.clear();
+
+    // Also call your context logout method if you're using it
+    logout(); // from AuthContext
+
+    // Redirect user to login or home page
+    navigate("/login");
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+};
+
+  const scrollToSection3 = () => {
+    if (section3Ref.current) {
+      section3Ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const renderArrowPrev = (onClickHandler, hasPrev, label) =>
     hasPrev && (
@@ -309,15 +245,26 @@ const Home = () => {
                   </Link>
                 </li>
                 <li>
-                  <button onClick={handleLogout} className="text-blue-500 text-2xl">
+                  <button
+                    onClick={handleLogout}
+                    className="text-blue-500 text-2xl"
+                  >
                     Logout
                   </button>
                 </li>
               </>
             ) : (
               <>
-                <li><Link to="/login" className="text-blue-500 text-2xl">Login</Link></li>
-                <li><Link to="/register" className="text-blue-500 text-2xl">Register</Link></li>
+                <li>
+                  <Link to="/login" className="text-blue-500 text-2xl">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-blue-500 text-2xl">
+                    Register
+                  </Link>
+                </li>
               </>
             )}
           </ul>
@@ -346,7 +293,9 @@ const Home = () => {
             24/7 Online Skin Disease Analysis By Uploading Image File, Audio
             File and Prescription
           </p>
-          <button className="cta-button bg-[#3363de] text-white py-2 px-6 rounded-lg text-lg font-montserrat hover:bg-[#0056b3] transition duration-300 shadow-md hover:shadow-lg">
+          <button className="cta-button bg-[#3363de] text-white py-2 px-6 rounded-lg text-lg font-montserrat hover:bg-[#0056b3] transition duration-300 shadow-md hover:shadow-lg"
+          onClick={scrollToSection3}
+          >
             Get Started
           </button>
         </div>
@@ -362,11 +311,18 @@ const Home = () => {
             {diseases.map((disease) => (
               <div key={disease.id} className="p-4">
                 <div className="bg-white rounded-lg p-6 flex flex-col items-center">
-                  <div className="bg-blue-500 rounded-full w-32 h-32 flex items-center justify-center mb-4">
-                    {/* Placeholder for disease icon or image */}
+                  <div className="bg-blue-500 rounded-full w-32 h-32 flex items-center justify-center mb-4 overflow-hidden">
+                    {/*object-cover to make the image fill the container */}
+                    <img
+                      src={disease.image}
+                      alt={disease.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{disease.name}</h3>
-                  <p className="text-gray-700 text-center">{disease.content}</p>
+                  <p className="text-gray-700 text-center">
+                    {disease.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -375,7 +331,9 @@ const Home = () => {
       </section>
 
       {/* Section 3 */}
-      <section className="py-0 px-6 md:px-24 bg-blue-500">
+      <section className="py-0 px-6 md:px-24 bg-blue-500"
+      ref={section3Ref}
+      >
         <div className="container mx-auto flex items-end">
           {/* Robot Image (Left) */}
           <div className="md:w-1/2 flex justify-center flex-grow">

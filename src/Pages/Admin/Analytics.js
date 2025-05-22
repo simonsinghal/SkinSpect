@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from 'react';
+import { Link , useNavigate} from 'react-router-dom';
+import { AuthContext } from '../../authContext';
 import {
   LineChart,
   Line,
@@ -111,8 +113,23 @@ const Analytics = () => {
     "#f781bf",
   ];
 
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+        const { currentUser, logout } = useContext(AuthContext);
+      
+        const handleLogout = () => {
+          logout();
+          navigate("/"); // Redirect to the home page after logout
+        };
+
   return (
     <div className="h-[calc(100vh-80px)] overflow-y-auto p-6 max-w-screen-xl mx-auto">
+                              <button
+        onClick={handleLogout}
+        className="absolute top-4 right-20 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-200 ease-in-out z-20" // Added z-20 to ensure it's on top
+      >
+        Logout
+      </button>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Total Analysis */}
         <div className="bg-white p-4 rounded shadow">
@@ -166,7 +183,10 @@ const Analytics = () => {
               <Legend />
               <Bar dataKey="value" name="Count">
                 {genderData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={genderColors[index % genderColors.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={genderColors[index % genderColors.length]}
+                  />
                 ))}
               </Bar>
             </BarChart>
@@ -185,7 +205,10 @@ const Analytics = () => {
               <Legend />
               <Bar dataKey="value" name="Count">
                 {ageData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={ageColors[index % ageColors.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={ageColors[index % ageColors.length]}
+                  />
                 ))}
               </Bar>
             </BarChart>
@@ -206,7 +229,10 @@ const Analytics = () => {
             <Legend />
             <Bar dataKey="value" name="Count">
               {locationData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={locationColors[index % locationColors.length]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={locationColors[index % locationColors.length]}
+                />
               ))}
             </Bar>
           </BarChart>
@@ -226,7 +252,10 @@ const Analytics = () => {
             <Legend />
             <Bar dataKey="value" name="Count">
               {diseaseData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={diseaseColors[index % diseaseColors.length]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={diseaseColors[index % diseaseColors.length]}
+                />
               ))}
             </Bar>
           </BarChart>
@@ -246,7 +275,10 @@ const Analytics = () => {
             <Legend />
             <Bar dataKey="value" name="Count">
               {symptomsData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={symptomColors[index % symptomColors.length]} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={symptomColors[index % symptomColors.length]}
+                />
               ))}
             </Bar>
           </BarChart>

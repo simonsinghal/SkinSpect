@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext} from "../../authContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalAnalysis, setTotalAnalysis] = useState(0);
   const [recentActivity, setRecentActivity] = useState([]);
+  const { currentUser, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/"); // Redirect to the home page after logout
+  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -49,7 +58,16 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col p-8">
+    
+    <div className="flex-1 flex flex-col p-8 relative">
+
+      <button
+        onClick={handleLogout}
+        className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-200 ease-in-out z-20" // Added z-20 to ensure it's on top
+      >
+        Logout
+      </button>
+
       {/* Top Boxes */}
       <div className="flex gap-4 mb-8">
         <div className="bg-white shadow-md rounded-lg p-6 w-64 text-center">
@@ -84,9 +102,9 @@ const Dashboard = () => {
                 <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   Activity
                 </th>
-                <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
+                {/* <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   Input Details
-                </th>
+                </th> */}
                 <th className="px-6 py-3 text-left text-medium font-medium tracking-wider">
                   User
                 </th>
@@ -104,12 +122,14 @@ const Dashboard = () => {
                   <td className="px-6 py-4">
                     {activity.activityType}
                   </td>
-                  <td className="px-6 py-4">
+                  {/* <td className="px-6 py-4">
                     {activity.activityType === "Image Analysis Submitted" &&
                       activity.inputDetails ? (
                         <div className="flex items-center">
                           <img
                             src={`http://localhost:5000/${activity.inputDetails}`}
+                            // src="http://localhost:5000/uploads/test.jpg"
+
                             alt="Uploaded Scan"
                             className="h-8 w-8 mr-2 rounded-md object-cover"
                             onError={(e) => {
@@ -125,7 +145,7 @@ const Dashboard = () => {
                         ) : (
                           <span>{activity.inputDetails}</span>
                         )}
-                  </td>
+                  </td> */}
                   <td className="px-6 py-4">
                     {activity.user}
                   </td>

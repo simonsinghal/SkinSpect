@@ -115,7 +115,9 @@ const FeaturesPage = () => {
                 individuals to take control of their skin health with
                 confidence.
               </p>
-              <button className="bg-white text-blue-700 py-3 px-6 rounded-lg font-medium hover:bg-blue-200">
+              <button className="bg-white text-blue-700 py-3 px-6 rounded-lg font-medium hover:bg-blue-200"
+              onClick={() => navigate('/about')}
+              >
                 Contact Us
               </button>
             </div>
@@ -295,7 +297,9 @@ const FeaturesPage = () => {
           <div className="text-center mt-8">
             {" "}
             {/* Center the button container */}
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => navigate('/login')}
+            >
               Get Started
             </button>
           </div>

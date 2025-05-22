@@ -19,15 +19,17 @@ router.post("/upload", upload.array("images", 2), async (req, res) => {
   console.log("Scan Upload - Request Body:", req.body);
   console.log("Scan Upload - Request Files:", req.files);
   try {
-    const { userId, name, age, gender, symptoms, result } = req.body;
+    const { userId, fullName, age, gender, symptoms, result } = req.body;
     const images = req.files.map((file) => file.path);
 
-    if (!userId || !name || !age || !gender || !symptoms || images.length === 0) {
+    if (!userId || !fullName|| !age || !gender || !symptoms || images.length === 0) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const newScan = new Scan({ userId, name, age, gender, images, symptoms, result });
+console.log("Paths generated for images:", images);
+    const newScan = new Scan({ userId, name:fullName, age, gender, images, symptoms, result });
     await newScan.save();
+    console.log("Scan document saved to DB (including images paths):", newScan);
 
     console.log("Scan Upload - Scan Saved:", newScan);
 
@@ -37,6 +39,7 @@ router.post("/upload", upload.array("images", 2), async (req, res) => {
       userId: userId,
       activityType: "Image Scan Uploaded",
       timestamp: new Date(),
+      // inputDetails: images.join(", ")
     });
     await newActivity.save();
 
@@ -75,6 +78,7 @@ router.get("/:userId", async (req, res) => {
       return scan.toObject();
     });
 
+    console.log("Scans being sent to frontend:", formattedScans);
     res.json(formattedScans);
   } catch (error) {
     console.error("Error fetching scans:", error);
